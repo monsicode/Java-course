@@ -1,46 +1,68 @@
 public class TextJustifier {
 
-    public static String[] justifyText(String[] words, int maxWidth){
+    public static String[] justifyText(String[] words, int maxWidth) {
+        String[] result = new String[words.length];
+        int ind = 0;
+        int i = 0;
 
-        String[] str = new String[words.length];
-
-        for (int i = 0; i < words.length; i++)
-        {
+        while (i < words.length) {
             int countWords = 0;
             int curLen = 0;
-
             int curI = i;
-            while(curLen < maxWidth)
-            {
-                if(curLen + words[i].length() > maxWidth) {
-                    break;
-                }
 
-                curLen += words[i].length();
+
+            while (curI < words.length && curLen + words[curI].length() + countWords <= maxWidth) {
+                curLen += words[curI].length();
                 countWords++;
-                i++;
-            }
-
-            int difference = maxWidth - curLen;
-            int countSep = difference / 2;
-
-            for(int j = 0 ; j < countWords; j++){
-                str[curI] = words[j];
                 curI++;
             }
-            str[str.length - 1] = "\n";
+
+            StringBuilder newStr = new StringBuilder();
+            int spacesToAdd = maxWidth - curLen;
+
+
+            if (curI == words.length || countWords == 1) {
+                for (int j = i; j < curI; j++) {
+                    newStr.append(words[j]);
+                    if (j < curI - 1) {
+                        newStr.append(" ");
+                    }
+                }
+
+                while (newStr.length() < maxWidth) {
+                    newStr.append(" ");
+                }
+            } else {
+
+                int spacesBetween = spacesToAdd / (countWords - 1);
+                int extraSpaces = spacesToAdd % (countWords - 1);
+
+                for (int j = i; j < curI - 1; j++) {
+                    newStr.append(words[j]);
+                    for (int k = 0; k < spacesBetween + (j - i < extraSpaces ? 1 : 0); k++) {
+                        newStr.append(" ");
+                    }
+                }
+                newStr.append(words[curI - 1]);
+            }
+
+            result[ind++] = newStr.toString();
+            i = curI;
         }
-        return str;
+
+
+        String[] finalResult = new String[ind];
+        System.arraycopy(result, 0, finalResult, 0, ind);
+
+        return finalResult;
     }
 
     public static void main(String[] args) {
-        String[] str = {"The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog."};
-       String[] newStr = justifyText( str, 11);
+        String[] str = {"Science", "is", "what", "we", "understand", "well", "enough", "to", "explain", "to", "a", "computer."};
+        String[] newStr = justifyText(str, 20);
 
         for (String s : newStr) {
-            System.out.print(s);
+            System.out.println(s);
         }
-
     }
-
 }

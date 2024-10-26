@@ -3,7 +3,7 @@ package bg.sofia.uni.fmi.mjt.gameplatform.store.item;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-//зашо го правим интерфейс като във всеки един от наследниците му имаме едни и същу член данни
+//защо го правим интерфейс като във всеки един от наследниците му имаме едни и същу член данни
 public interface StoreItem {
 
 /**

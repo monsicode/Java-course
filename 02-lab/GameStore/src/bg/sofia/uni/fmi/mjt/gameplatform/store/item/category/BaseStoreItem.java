@@ -5,6 +5,7 @@ import bg.sofia.uni.fmi.mjt.gameplatform.store.item.StoreItem;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.prefs.BackingStoreException;
 
 abstract class BaseStoreItem implements StoreItem {
 
@@ -12,11 +13,14 @@ abstract class BaseStoreItem implements StoreItem {
     protected BigDecimal price;
     protected LocalDateTime releaseDate;
     protected double rating;
+    private int countRatings;
 
     public BaseStoreItem(String title, BigDecimal price, LocalDateTime releaseDate){
         setTitle(title);
         setPrice(price);
         setReleaseDate(releaseDate);
+        rating = 0;
+        countRatings = 0;
     }
 
     @Override
@@ -57,13 +61,24 @@ abstract class BaseStoreItem implements StoreItem {
 
     @Override
     public void rate(double rating) {
+        double temp = this.rating * countRatings;
+        countRatings++;
 
-        if(rating < 1 || rating > 5)
-        {
-            System.out.println("Price is out of range");
-        }
-
-        this.rating = rating;
+        this.rating = (temp + rating) / countRatings;
     }
+
+    public static void main(String[] args) {
+        BaseStoreItem game = new Game("Epic Adventure", new BigDecimal("29.99"), LocalDateTime.of(2024, 9, 15, 10, 0), "Adventure");
+
+        game.rate(4);
+        game.rate(3);
+        game.rate(1);
+
+        System.out.println(game.getRating());
+
+
+
+    }
+
 
 }
