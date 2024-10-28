@@ -6,8 +6,6 @@ enum Color{
 class Main{
     Color colorRed = Color.RED;
 
-    Color color = Color.valueOf(RED);
-
 }
 
 
