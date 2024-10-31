@@ -7,14 +7,10 @@ import java.time.LocalDateTime;
 
 public class Bicycle extends Vehicle {
 
-    private double pricePerDay;
-    private double pricePerHour;
-
-
     public Bicycle(String id, String model, double pricePerDay, double pricePerHour){
         super(id, model);
-        this.pricePerDay = pricePerDay;
-        this.pricePerHour = pricePerHour;
+        super.pricePerDay = pricePerDay;
+        super.pricePerHour = pricePerHour;
     }
 
     @Override
@@ -24,9 +20,14 @@ public class Bicycle extends Vehicle {
         }
 
         Duration rentalDuration = Duration.between(startRentTime, rentalEnd);
-        long hours = rentalDuration.toHours();
-        long days = rentalDuration.toDays();
+        if (rentalDuration.compareTo(Duration.ofDays(7)) >= 0) {
+            throw new InvalidRentingPeriodException("Renting period is above one week!");
+        }
 
-        return (days * pricePerDay) + ((hours % 24) * pricePerHour);
+        long totalDays = rentalDuration.toDays();
+        long days = totalDays % 7;
+        long hours = rentalDuration.toHours() % 24;
+
+        return (days * pricePerDay) + (hours  * pricePerHour);
     }
 }

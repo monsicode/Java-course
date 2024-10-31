@@ -16,6 +16,8 @@ public abstract class Vehicle {
     protected Driver driver;
     protected LocalDateTime startRentTime;
     protected LocalDateTime rentalEnd;
+    protected double pricePerDay;
+    protected double pricePerHour;
 
     protected boolean isRented = false;
 
@@ -24,14 +26,17 @@ public abstract class Vehicle {
         this.model = model;
     }
 
-   public LocalDateTime getStartRentTime(){
+    public LocalDateTime getStartRentTime() {
         return startRentTime;
     }
 
-    public LocalDateTime getRentalEnd(){
+    public LocalDateTime getRentalEnd() {
         return rentalEnd;
     }
 
+    public boolean getIsRented(){
+        return isRented;
+    }
 
     /**
      * Simulates rental of the vehicle. The vehicle now is considered rented by the provided driver and the start of the rental is the provided date.
@@ -61,7 +66,7 @@ public abstract class Vehicle {
      *                                       and the driver tries to return them after an hour.
      */
 
-    private void checkReturnBackTime(LocalDateTime rentalEnd) throws InvalidRentingPeriodException{
+    private void checkReturnBackTime(LocalDateTime rentalEnd) throws InvalidRentingPeriodException {
         if (rentalEnd == null) {
             throw new IllegalArgumentException("Value of return time is null");
         }
@@ -74,6 +79,7 @@ public abstract class Vehicle {
             throw new InvalidRentingPeriodException("Invalid renting period!");
         }
     }
+
     public void returnBack(LocalDateTime rentalEnd) throws InvalidRentingPeriodException {
         checkReturnBackTime(rentalEnd);
 

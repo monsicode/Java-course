@@ -5,7 +5,7 @@ import bg.sofia.uni.fmi.mjt.vehiclerent.exception.InvalidRentingPeriodException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class MotorVehicle extends Vehicle {
+public abstract class MotorVehicle extends Vehicle {
 
     protected static final int PRICE_PER_SEAT = 5;
 
@@ -13,8 +13,6 @@ public class MotorVehicle extends Vehicle {
     protected final FuelType fuelType;
     protected final int numberOfSeats;
     protected final double pricePerWeek;
-    protected final double pricePerDay;
-    protected final double pricePerHour;
 
 
     public MotorVehicle(String id, String model, FuelType fuelType, int numberOfSeats, double pricePerWeek, double pricePerDay, double pricePerHour) {
@@ -33,13 +31,14 @@ public class MotorVehicle extends Vehicle {
         }
 
         Duration rentalDuration = Duration.between(startOfRent, endOfRent);
-        long hours = rentalDuration.toHoursPart();
-        long days = rentalDuration.toDays() % 7;
-        long weeks =  rentalDuration.toDays() / 7;
+        long totalDays = rentalDuration.toDays();
+        long weeks = totalDays / 7;
+        long days = totalDays % 7;
+        long hours = rentalDuration.toHours() % 24;
 
         double priceSeats = numberOfSeats * PRICE_PER_SEAT;
 
-        double price = (weeks * pricePerWeek) + (days * pricePerDay) + (hours * pricePerHour) + priceSeats + driver.ageGroup().getPriceRent() + fuelType.getPriceFuel();
+        double price = (weeks * pricePerWeek) + (days * pricePerDay) + (hours * pricePerHour) + priceSeats + driver.ageGroup().getPriceRent() + fuelType.getPriceFuel()*days;
 
         return price;
     }

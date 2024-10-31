@@ -19,10 +19,15 @@ public class Caravan extends MotorVehicle {
 
     @Override
     public double calculateRentalPrice(LocalDateTime startOfRent, LocalDateTime endOfRent) throws InvalidRentingPeriodException {
-        Duration rentalDuration = Duration.between(startRentTime, rentalEnd);
+        if (startOfRent.isAfter(endOfRent)) {
+            throw new InvalidRentingPeriodException("Invalid renting period ! ");
+        }
 
-        if (rentalDuration.compareTo(Duration.ofHours(24)) < 0) {
-            throw new InvalidRentingPeriodException("Renting persion is under one day!");
+
+
+        Duration rentalDuration = Duration.between(startOfRent, endOfRent);
+        if (rentalDuration.compareTo(Duration.ofDays(1)) < 0) {
+            throw new InvalidRentingPeriodException("Renting period is under one day!");
         }
 
         double basePrice = super.calculateRentalPrice(startOfRent, endOfRent);
