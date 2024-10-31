@@ -20,7 +20,7 @@ public class RentalService {
      * @param startOfRent the start time of the rental
      */
     public void rentVehicle(Driver driver, Vehicle vehicle, LocalDateTime startOfRent) {
-        throw new UnsupportedOperationException("Dear Student, Remove this Exception and Implement this method");
+          vehicle.rent(driver, startOfRent);
     }
 
     /**
@@ -36,6 +36,7 @@ public class RentalService {
      * does not allow the passed period for rental, e.g. Caravans must be rented for at least a day.
      */
     public double returnVehicle(Vehicle vehicle, LocalDateTime endOfRent) throws InvalidRentingPeriodException {
-        throw new UnsupportedOperationException("Dear Student, Remove this Exception and Implement this method");
+        vehicle.returnBack(endOfRent);
+        return vehicle.calculateRentalPrice(vehicle.getStartRentTime(),vehicle.getRentalEnd());
     }
 }

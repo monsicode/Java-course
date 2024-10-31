@@ -18,16 +18,6 @@ public class Bicycle extends Vehicle {
     }
 
     @Override
-    public void setMinTime() {
-        this.minTime = Duration.ofHours(1);
-    }
-
-    @Override
-    public void setMaxTime() {
-        this.maxTime = Duration.ofDays(7);
-    }
-
-    @Override
     public double calculateRentalPrice(LocalDateTime startOfRent, LocalDateTime endOfRent) throws InvalidRentingPeriodException {
         if(startOfRent.isAfter(endOfRent)){
             throw new InvalidRentingPeriodException("Invalid renting period ! ");

@@ -11,38 +11,37 @@ import java.util.Objects;
 
 public abstract class Vehicle {
 
-    protected static final int PRICE_PER_SEAT = 5;
-
     protected String id;
     protected String model;
     protected Driver driver;
     protected LocalDateTime startRentTime;
     protected LocalDateTime rentalEnd;
 
-    protected boolean isRented  = false;
-
-    protected Duration minTime;
-    protected Duration maxTime;
-
-    protected double price;
-
-
-
+    protected boolean isRented = false;
 
     public Vehicle(String id, String model) {
         this.id = id;
         this.model = model;
     }
 
+   public LocalDateTime getStartRentTime(){
+        return startRentTime;
+    }
+
+    public LocalDateTime getRentalEnd(){
+        return rentalEnd;
+    }
+
 
     /**
      * Simulates rental of the vehicle. The vehicle now is considered rented by the provided driver and the start of the rental is the provided date.
-     * @param driver the driver that wants to rent the vehicle.
+     *
+     * @param driver        the driver that wants to rent the vehicle.
      * @param startRentTime the start time of the rent
      * @throws VehicleAlreadyRentedException in case the vehicle is already rented by someone else or by the same driver.
      */
     public void rent(Driver driver, LocalDateTime startRentTime) {
-        if(isRented){
+        if (isRented) {
             throw new VehicleAlreadyRentedException("The vehicle is already rented!");
         }
 
@@ -53,52 +52,46 @@ public abstract class Vehicle {
 
     /**
      * Simulates end of rental for the vehicle - it is no longer rented by a driver.
+     *
      * @param rentalEnd time of end of rental
-     * @throws IllegalArgumentException in case @rentalEnd is null
-     * @throws VehicleNotRentedException in case the vehicle is not rented at all
+     * @throws IllegalArgumentException      in case @rentalEnd is null
+     * @throws VehicleNotRentedException     in case the vehicle is not rented at all
      * @throws InvalidRentingPeriodException in case the rentalEnd is before the currently noted start date of rental or
-     * in case the Vehicle does not allow the passed period for rental, e.g. Caravans must be rented for at least a day
-     * and the driver tries to return them after an hour.
+     *                                       in case the Vehicle does not allow the passed period for rental, e.g. Caravans must be rented for at least a day
+     *                                       and the driver tries to return them after an hour.
      */
-    public void returnBack(LocalDateTime rentalEnd) throws InvalidRentingPeriodException {
-       if(rentalEnd == null){
-           throw new IllegalArgumentException("Value of return time is null");
-       }
 
-       if(!isRented){
-           throw new VehicleNotRentedException("Vehicle is not rented to be returned !");
-       }
-
-       if(startRentTime.isAfter(rentalEnd)){
-           throw new InvalidRentingPeriodException("Invalid renting period!");
-       }
-
-        Duration rentalDuration = Duration.between(startRentTime, rentalEnd);
-       if ((minTime != null && rentalDuration.compareTo(minTime) < 0) ||
-                (maxTime != null && rentalDuration.compareTo(maxTime) > 0)){
-            throw new InvalidRentingPeriodException("Invalid renting period!");
+    private void checkReturnBackTime(LocalDateTime rentalEnd) throws InvalidRentingPeriodException{
+        if (rentalEnd == null) {
+            throw new IllegalArgumentException("Value of return time is null");
         }
 
-       this.rentalEnd = rentalEnd;
-       isRented = false;
+        if (!isRented) {
+            throw new VehicleNotRentedException("Vehicle is not rented to be returned !");
+        }
+
+        if (startRentTime.isAfter(rentalEnd)) {
+            throw new InvalidRentingPeriodException("Invalid renting period!");
+        }
+    }
+    public void returnBack(LocalDateTime rentalEnd) throws InvalidRentingPeriodException {
+        checkReturnBackTime(rentalEnd);
+
+        this.rentalEnd = rentalEnd;
+        isRented = false;
     }
 
-     public abstract void setMinTime();
-     public abstract void setMaxTime();
     /**
      * Used to calculate potential rental price without the vehicle to be rented.
      * The calculation is based on the type of the Vehicle (Car/Caravan/Bicycle).
      *
      * @param startOfRent the beginning of the rental
-     * @param endOfRent the end of the rental
+     * @param endOfRent   the end of the rental
      * @return potential price for rent
      * @throws InvalidRentingPeriodException in case the vehicle cannot be rented for that period of time or
-     * the period is not valid (end date is before start date)
+     *                                       the period is not valid (end date is before start date)
      */
     public abstract double calculateRentalPrice(LocalDateTime startOfRent, LocalDateTime endOfRent) throws InvalidRentingPeriodException;
-
-
-
 
 
 }

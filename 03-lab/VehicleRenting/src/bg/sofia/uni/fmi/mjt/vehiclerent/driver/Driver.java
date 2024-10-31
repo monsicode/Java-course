@@ -1,3 +1,3 @@
 package bg.sofia.uni.fmi.mjt.vehiclerent.driver;
 
-public record Driver(AgeGroup driver){ }
+public record Driver(AgeGroup ageGroup){ }
