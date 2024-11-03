@@ -1,20 +1,13 @@
 package bg.sofia.uni.fmi.mjt.socialnetwork.profile;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.atomic.AtomicInteger;
-
 
 public class DefaultUserProfile implements UserProfile {
 
-    private static final AtomicInteger counter = new AtomicInteger(0);
-    private final int id;
     private final String username;
     Set<Interest> interestsUser;
     Set<UserProfile> friends;
@@ -23,12 +16,9 @@ public class DefaultUserProfile implements UserProfile {
     //private final Map<UserProfile, List<UserProfile>> friends = null;
 
     public DefaultUserProfile(String username) {
-        this.id = counter.incrementAndGet();
         this.username = username;
-    }
-
-    public int getUserId(){
-         return id;
+        friends = new HashSet<>();
+        interestsUser = new HashSet<>();
     }
 
     @Override
@@ -81,24 +71,27 @@ public class DefaultUserProfile implements UserProfile {
         if (friends.contains(userProfile)) {
             return false;
         } else {
-            return friends.add(userProfile);
+            friends.add(userProfile);
+            userProfile.addFriend(this);
+            return true;
         }
 
     }
 
     @Override
     public boolean unfriend(UserProfile userProfile) {
-        if (userProfile == null ) {
+        if (userProfile == null) {
             throw new IllegalArgumentException("The user is trying to add themselves as a friend or the user is null!");
         }
 
         if (!friends.contains(userProfile)) {
             return false;
         } else {
-            return friends.remove(userProfile);
+            friends.remove(userProfile);
+            userProfile.unfriend(this);
+            return true;
         }
     }
-
 
     @Override
     public boolean isFriend(UserProfile userProfile) {
@@ -109,17 +102,16 @@ public class DefaultUserProfile implements UserProfile {
         return friends.contains(userProfile);
     }
 
-
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         DefaultUserProfile that = (DefaultUserProfile) object;
-        return id == that.id;
+        return Objects.equals(username, that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(username);
     }
 }

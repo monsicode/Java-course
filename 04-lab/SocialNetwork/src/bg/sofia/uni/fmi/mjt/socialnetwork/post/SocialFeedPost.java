@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -14,8 +15,8 @@ import java.util.UUID;
 public class SocialFeedPost implements Post {
 
     private final String id;
-    private UserProfile author;
-    private String content;
+    private final UserProfile author;
+    private final String content;
     private final LocalDateTime publishedOn;
     private final Map<ReactionType, Set<UserProfile>> reactions;
 
@@ -26,7 +27,6 @@ public class SocialFeedPost implements Post {
         this.publishedOn = LocalDateTime.now();
         this.reactions = new HashMap<>();
     }
-
 
     @Override
     public String getUniqueId() {
@@ -54,21 +54,38 @@ public class SocialFeedPost implements Post {
             throw new IllegalArgumentException("User or reaction has a null value");
         }
 
-        // reactions не имплементира Iterable, а entrySet() е метод, който връща обект, който е Iterable
-        for (Map.Entry<ReactionType, Set<UserProfile>> entry : reactions.entrySet()) {
-            if (entry.getValue().contains(userProfile)) {
-                entry.getValue().add(userProfile);
-                reactions.put(reactionType, entry.getValue());
+        Iterator<Map.Entry<ReactionType, Set<UserProfile>>> iterator = reactions.entrySet().iterator();
+
+        boolean isNewlyAdded = true;
+
+        while (iterator.hasNext()) {
+            Map.Entry<ReactionType, Set<UserProfile>> entry = iterator.next();
+            //Love ---> user1
+            //Love --> -
+            //user1 haha
+            if (entry.getValue().contains(userProfile) && entry.getKey() != reactionType) {
+                entry.getValue().remove(userProfile);
+
+                // not working bc i change the map while iterating
+
+                if (entry.getValue().size() == 0) {
+                    iterator.remove();
+                }
+
+                isNewlyAdded = false;
+                break;
+
+            }
+            if (entry.getValue().contains(userProfile) && entry.getKey() == reactionType) {
                 return false;
             }
+
         }
 
-        if (!reactions.containsKey(reactionType)) {
-            reactions.put(reactionType, new HashSet<>());
-        }
-
+        reactions.putIfAbsent(reactionType, new HashSet<>());
         reactions.get(reactionType).add(userProfile);
-        return true;
+
+        return isNewlyAdded;
     }
 
     @Override
@@ -77,12 +94,21 @@ public class SocialFeedPost implements Post {
             throw new IllegalArgumentException("User is null");
         }
 
-        for (Map.Entry<ReactionType, Set<UserProfile>> entry : reactions.entrySet()) {
+        Iterator<Map.Entry<ReactionType, Set<UserProfile>>> iterator = reactions.entrySet().iterator();
+
+        while (iterator.hasNext()) {
+            Map.Entry<ReactionType, Set<UserProfile>> entry = iterator.next();
             if (entry.getValue().contains(userProfile)) {
                 entry.getValue().remove(userProfile);
+
+                if (entry.getValue().size() == 0) {
+                    iterator.remove();
+                }
+
                 return true;
             }
         }
+
         return false;
     }
 

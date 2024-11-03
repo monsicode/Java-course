@@ -74,7 +74,7 @@ public interface SocialNetwork {
      * @throws IllegalArgumentException  if any of the user profiles is null
      */
     Set<UserProfile> getMutualFriends(UserProfile userProfile1, UserProfile userProfile2)
-            throws UserRegistrationException;
+        throws UserRegistrationException;
 
     /**
      * Returns a sorted set of all user profiles ordered by the number of friends they have in
