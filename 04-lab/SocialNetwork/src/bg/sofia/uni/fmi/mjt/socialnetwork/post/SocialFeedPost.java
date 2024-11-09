@@ -55,33 +55,25 @@ public class SocialFeedPost implements Post {
         }
 
         Iterator<Map.Entry<ReactionType, Set<UserProfile>>> iterator = reactions.entrySet().iterator();
-
         boolean isNewlyAdded = true;
 
         while (iterator.hasNext()) {
             Map.Entry<ReactionType, Set<UserProfile>> entry = iterator.next();
-            //Love ---> user1
-            //Love --> -
-            //user1 haha
             if (entry.getValue().contains(userProfile) && entry.getKey() != reactionType) {
-                entry.getValue().remove(userProfile);
 
-                // not working bc i change the map while iterating
+                entry.getValue().remove(userProfile);
 
                 if (entry.getValue().size() == 0) {
                     iterator.remove();
                 }
-
                 isNewlyAdded = false;
                 break;
-
             }
+
             if (entry.getValue().contains(userProfile) && entry.getKey() == reactionType) {
                 return false;
             }
-
         }
-
         reactions.putIfAbsent(reactionType, new HashSet<>());
         reactions.get(reactionType).add(userProfile);
 

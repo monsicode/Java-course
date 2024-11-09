@@ -98,13 +98,9 @@ public class SocialNetworkImpl implements SocialNetwork {
                 }
             }
         }
-
         return reachedUsers;
-
     }
 
-    //     * @throws UserRegistrationException if any of the user profiles is not registered
-//     * @throws IllegalArgumentException  if any of the user profiles is null
     @Override
     public Set<UserProfile> getMutualFriends(UserProfile userProfile1, UserProfile userProfile2)
         throws UserRegistrationException {
