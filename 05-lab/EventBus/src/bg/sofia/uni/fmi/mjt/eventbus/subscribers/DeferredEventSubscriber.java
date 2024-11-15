@@ -1,15 +1,23 @@
 package bg.sofia.uni.fmi.mjt.eventbus.subscribers;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import bg.sofia.uni.fmi.mjt.eventbus.events.Event;
 
 public class DeferredEventSubscriber<T extends Event<?>> implements Subscriber<T>, Iterable<T> {
 
-    private final List<T> events = new ArrayList<>();
+    private final Queue<T> events = new PriorityQueue<>(new Comparator<T>() {
+        @Override
+        public int compare(T o1, T o2) {
+            if (Integer.compare(o1.getPriority(), o2.getPriority()) == 0) {
+                return o1.getTimestamp().compareTo(o2.getTimestamp());
+            }
+            return Integer.compare(o1.getPriority(), o2.getPriority());
+        }
+    });
 
     /**
      * Store an event for processing at a later time.
@@ -34,21 +42,7 @@ public class DeferredEventSubscriber<T extends Event<?>> implements Subscriber<T
      */
     @Override
     public Iterator<T> iterator() {
-        List<T> sortedEvents = new ArrayList<>(events);
-
-        sortedEvents.sort(new Comparator<T>() {
-            @Override
-            public int compare(T event1, T event2) {
-                int priorityComparison = Integer.compare(event2.getPriority(), event1.getPriority());
-                if (priorityComparison != 0) {
-                    return priorityComparison;
-                }
-
-                return event1.getTimestamp().compareTo(event2.getTimestamp());
-            }
-        });
-
-        return sortedEvents.iterator();
+        return events.iterator();
     }
 
     /**
