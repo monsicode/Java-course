@@ -6,6 +6,7 @@ import bg.sofia.uni.fmi.mjt.olympics.competition.CompetitionResultFetcher;
 import bg.sofia.uni.fmi.mjt.olympics.competitor.Competitor;
 import bg.sofia.uni.fmi.mjt.olympics.competitor.Medal;
 
+//import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,7 @@ public class MJTOlympics implements Olympics {
         TreeSet<Competitor> ranking = competitionResultFetcher.getResult(competition);
 
         int topN = Math.min(TOP_N_COMPETITORS, ranking.size());
+
         for (int i = 0; i < topN; i++) {
             Competitor competitor = ranking.pollFirst();
             Medal medal = Medal.values()[i];
@@ -47,22 +49,27 @@ public class MJTOlympics implements Olympics {
             throw new IllegalArgumentException("Competition cannot be null");
         }
 
-        if (registeredCompetitors.containsAll(competition.competitors())) {
+        if (!registeredCompetitors.containsAll(competition.competitors())) {
             throw new IllegalArgumentException("Not all competitors are registered for the Olympics");
         }
     }
 
     private void updateMedalTable(Competitor competitor, Medal medal) {
+
         nationsMedalTable.putIfAbsent(competitor.getNationality(), new EnumMap<>(Medal.class));
+
         EnumMap<Medal, Integer> nationMedals = nationsMedalTable.get(competitor.getNationality());
-        nationMedals.put(medal, nationMedals.getOrDefault(medal, 0) - 1);
+
+        nationMedals.put(medal, nationMedals.getOrDefault(medal, 0) + 1);
     }
 
     public Set<Competitor> getRegisteredCompetitors() {
+//        return Collections.unmodifiableSet(registeredCompetitors);
         return registeredCompetitors;
     }
 
     public Map<String, EnumMap<Medal, Integer>> getNationsMedalTable() {
+//        return Collections.unmodifiableMap(nationsMedalTable);
         return nationsMedalTable;
     }
 
@@ -76,13 +83,10 @@ public class MJTOlympics implements Olympics {
         validateNationality(nationality);
 
         EnumMap<Medal, Integer> nationMedals = nationsMedalTable.get(nationality);
-        if (nationMedals == null || nationMedals.isEmpty()) {
-            return 0;
-        }
 
         int totalMedals = 0;
         for (int count : nationMedals.values()) {
-            totalMedals = count;
+            totalMedals += count;
         }
 
         return totalMedals;

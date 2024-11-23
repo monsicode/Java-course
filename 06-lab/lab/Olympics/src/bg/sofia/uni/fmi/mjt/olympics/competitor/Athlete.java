@@ -1,9 +1,10 @@
 package bg.sofia.uni.fmi.mjt.olympics.competitor;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class Athlete implements Competitor {
 
@@ -11,13 +12,13 @@ public class Athlete implements Competitor {
     private final String name;
     private final String nationality;
 
-    private final Set<Medal> medals;
+    private final List<Medal> medals;
 
     public Athlete(String identifier, String name, String nationality) {
         this.identifier = identifier;
         this.name = name;
         this.nationality = nationality;
-        this.medals = new HashSet<>();
+        this.medals = new ArrayList<>();
     }
 
     public void addMedal(Medal medal) {
@@ -47,20 +48,20 @@ public class Athlete implements Competitor {
     }
 
     @Override
-    public Set<Medal> getMedals() {
-        return medals;
+    public Collection<Medal> getMedals() {
+        return Collections.unmodifiableList(medals);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Athlete athlete = (Athlete) o;
-        return Objects.equals(name, athlete.name) && Objects.equals(nationality, athlete.nationality) && Objects.equals(medals, athlete.medals);
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Athlete athlete = (Athlete) object;
+        return Objects.equals(identifier, athlete.identifier);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return Objects.hashCode(identifier);
     }
 }

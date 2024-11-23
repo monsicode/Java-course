@@ -15,7 +15,7 @@ public class NationMedalComparator implements Comparator<String> {
     @Override
     public int compare(String nation1, String nation2) {
         int totalMedals1 = olympics.getTotalMedals(nation1);
-        int totalMedals2 = olympics.getTotalMedals(nation1);
+        int totalMedals2 = olympics.getTotalMedals(nation2);
 
         if (totalMedals1 != totalMedals2) {
             return Integer.compare(totalMedals2, totalMedals1);

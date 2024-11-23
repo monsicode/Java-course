@@ -2,7 +2,7 @@ package bg.sofia.uni.fmi.mjt.olympics.competition;
 
 import bg.sofia.uni.fmi.mjt.olympics.competitor.Competitor;
 
-import java.util.Collections;
+//import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,8 +13,20 @@ import java.util.Set;
  */
 public record Competition(String name, String discipline, Set<Competitor> competitors) {
 
+    public Competition {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be null or blank");
+        }
+        if (discipline == null || discipline.isBlank()) {
+            throw new IllegalArgumentException("Discipline cannot be null or blank");
+        }
+        if (competitors == null || competitors.isEmpty()) {
+            throw new IllegalArgumentException("Competitors cannot be null or empty");
+        }
+    }
+
     public Set<Competitor> competitors() {
-        return Collections.unmodifiableSet(competitors);
+        return competitors;
     }
 
     @Override
