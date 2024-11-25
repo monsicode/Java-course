@@ -25,6 +25,33 @@ public class Main {
 
         fsImageManager.saveImage(grayscaleImage, new File("mike-tyson-powerful-punch-grayscale.jpg"));
         fsImageManager.saveImage(edgeDetectedImage, new File("mike-tyson-powerful-punch-edge-detected.jpg"));
+
     }
 
 }
+
+
+//  try {
+//            // Създаване на File обект за директорията
+//            File imagesDirectory =
+//            new File("C:\\Users\\Monika\\Documents\\JAVA\\07-lab\\lab\\PhotoEdgeDetector\\imgFiles");
+//
+//            // Зареждане на изображенията чрез вашия fsImageManager
+//            List<BufferedImage> imgs = fsImageManager.loadImagesFromDirectory(imagesDirectory);
+//
+//            // Обхождане и обработка на всяко изображение
+//            for (int i = 0; i < imgs.size(); i++) {
+//                BufferedImage image = imgs.get(i);
+//
+//                System.out.println("Processing image " + (i + 1) + " with size: " +
+//                    image.getWidth() + "x" + image.getHeight());
+//
+//                // Пример за обработка - записваме обработеното изображение
+//                File outputFile = new File(imagesDirectory, "processed_image_" + (i + 1) + ".png");
+//                ImageIO.write(image, "png", outputFile);
+//
+//                System.out.println("Image saved to: " + outputFile.getAbsolutePath());
+//            }
+//        } catch (IOException e) {
+//            System.err.println("Error while processing images: " + e.getMessage());
+//        }
