@@ -77,9 +77,11 @@ public class LocalFileSystemImageManager implements FileSystemImageManager {
             throw new IOException("File already exist");
         }
 
-        if (!imageFile.getParentFile().exists()) {
-            throw new IOException("Parent dir does not exist");
-        }
+        File parentDir = imageFile.getParentFile();
+
+//        if (parentDir == null || !parentDir.exists()) {
+//            throw new IOException("Parent directory does not exist");
+//        }
 
         try (var fileOutputStream = new FileOutputStream(imageFile)) {
 
