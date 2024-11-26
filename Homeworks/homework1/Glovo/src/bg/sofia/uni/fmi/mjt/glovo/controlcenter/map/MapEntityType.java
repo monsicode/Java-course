@@ -7,8 +7,14 @@ public enum MapEntityType {
     CLIENT('C'),
     DELIVERY_GUY_CAR('A'),
     DELIVERY_GUY_BIKE('B');
-    // ...
+
+    private final char id;
 
     MapEntityType(char c) {
+        id = c;
+    }
+
+    public char getId() {
+        return id;
     }
 }

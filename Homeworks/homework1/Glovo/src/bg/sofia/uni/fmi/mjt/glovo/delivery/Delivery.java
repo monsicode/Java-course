@@ -8,7 +8,6 @@ public class Delivery {
 
     public Delivery(Location client, Location restaurant, Location deliveryGuy, String foodItem, double price,
                     int estimatedTime) {
-
-
     }
+
 }

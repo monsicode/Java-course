@@ -2,7 +2,7 @@ package bg.sofia.uni.fmi.mjt.glovo;
 
 import java.util.*;
 
-class AStar {
+class AStarAlgorithm {
     private static final int[] UP = {-1, 0};
     private static final int[] DOWN = {1, 0};
     private static final int[] LEFT = {0, -1};
@@ -15,7 +15,7 @@ class AStar {
     private final Set<Cell> visited;
     private final Map<Cell, Cell> cameFrom;
 
-    public AStar(char[][] grid, Cell start, Cell end) {
+    public AStarAlgorithm(char[][] grid, Cell start, Cell end) {
         this.mapLayout = grid;
         this.start = start;
         this.end = end;
@@ -122,7 +122,7 @@ class AStar {
             // x: 0    1    2    3    4   /y
             {'#', '.', 'R', '#', '#'},// 0
             {'#', '.', '#', '.', '.'},// 1
-            {'.', '.', '#', '.', '#'},// 2
+            {'B', '.', '#', '.', '#'},// 2
             {'#', 'C', '.', 'A', '.'},// 3
             {'#', '.', '#', '#', '#'} // 4
         };
@@ -131,15 +131,21 @@ class AStar {
         Cell start = new Cell(3, 3); // 'A' (начало)
         Cell end = new Cell(0, 2);   // 'R' (край)
 
-        AStar aStar = new AStar(layout, start, end);
+        AStarAlgorithm aStar = new AStarAlgorithm(layout, start, end);
         List<Cell> path = aStar.findPath();
 
-        if (path.isEmpty()) {
-            System.out.println("No path found");
-        } else {
-            for (Cell node : path) {
-                System.out.println("(" + node.row + ", " + node.col + ")");
-            }
+        List<Cell> allDelGusLocation = Utils.findAllStartingPoints(layout);
+
+        for(Cell cell : allDelGusLocation){
+            System.out.println("(" + cell.row + ", " + cell.col + ")");
         }
+//
+//        if (path.isEmpty()) {
+//            System.out.println("No path found");
+//        } else {
+//            for (Cell node : path) {
+//                System.out.println("(" + node.row + ", " + node.col + ")");
+//            }
+//        }
     }
 }
