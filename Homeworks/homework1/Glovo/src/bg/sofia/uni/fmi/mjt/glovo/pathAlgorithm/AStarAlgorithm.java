@@ -34,9 +34,7 @@ public class AStarAlgorithm {
         this.mapLayout = grid;
         this.start = start;
         this.end = end;
-
-        //to fix
-        this.open = new PriorityQueue<>(Comparator.comparingInt(n -> n.getFCost()));
+        this.open = new PriorityQueue<>(new CellComparator());
         this.visited = new HashSet<>();
         this.cameFrom = new HashMap<>();
     }
