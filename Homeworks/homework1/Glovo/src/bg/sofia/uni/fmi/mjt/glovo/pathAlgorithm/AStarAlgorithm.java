@@ -4,11 +4,12 @@ import bg.sofia.uni.fmi.mjt.glovo.Utils;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.deliverymethod.CheapestDelivery;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.deliverymethod.DeliveryMethod;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.deliverymethod.FastestDelivery;
+import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryInfo;
+import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryInfoPriceComparator;
+import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryInfoTimeComparator;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryType;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+
+import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.Location;
+import bg.sofia.uni.fmi.mjt.glovo.delivery.ShippingMethod;
 
 public class AStarAlgorithm {
     private static final int[] UP = {-1, 0};
@@ -28,7 +32,6 @@ public class AStarAlgorithm {
     private final Cell end;
     private final Queue<Cell> open;
     private final Set<Cell> visited;
-    private final Map<Cell, Cell> cameFrom;
 
     public AStarAlgorithm(char[][] grid, Cell start, Cell end) {
         this.mapLayout = grid;
@@ -36,7 +39,6 @@ public class AStarAlgorithm {
         this.end = end;
         this.open = new PriorityQueue<>(new CellComparator());
         this.visited = new HashSet<>();
-        this.cameFrom = new HashMap<>();
     }
 
     private int heuristic(Cell current) {
@@ -60,6 +62,7 @@ public class AStarAlgorithm {
         return neighbours;
     }
 
+    // to be static
     public int findPath() {
         start.setgCost(0);
         start.setfCost(heuristic(start));
@@ -80,7 +83,6 @@ public class AStarAlgorithm {
                 int tentativeG = current.getGCost() + 1;
 
                 if (!open.contains(neighbour) || tentativeG < neighbour.getGCost()) {
-                    cameFrom.put(neighbour, current);
                     neighbour.setgCost(tentativeG);
                     neighbour.setfCost(tentativeG + heuristic(neighbour));
 
@@ -94,22 +96,10 @@ public class AStarAlgorithm {
         return 0;
     }
 
-    //to remove
-    private List<Cell> reconstructPath(Cell current) {
-        List<Cell> path = new ArrayList<>();
-        while (cameFrom.containsKey(current)) {
-            path.add(current);
-            current = cameFrom.get(current);
-        }
-        path.add(start);
-        Collections.reverse(path);
-        return path;
-    }
-
     public static void main(String[] args) {
         char[][] layout = {
             // x: 0    1    2    3    4   /y
-            {'.', 'B', 'A', '.', '#'},// 0
+            {'.', 'A', 'B', '.', '#'},// 0
             {'R', '.', '#', 'B', '.'},// 1
             {'.', '.', '#', '.', '#'},// 2
             {'#', 'C', '#', 'A', '.'},// 3
@@ -131,7 +121,8 @@ public class AStarAlgorithm {
 
     private static <T extends DeliveryMethod> int findByCriteria(char[][] layout, Cell end, T function) {
         List<Cell> allDeliveryGuysLocation = Utils.getAllStartingPoints(layout);
-        Map<Cell, DeliveryType> deliveryGuys = Utils.getDeliveryGuys();
+
+        Map<Cell, DeliveryType> deliveryTypes = Utils.getDeliveryGuys();
 
         int minResult = Integer.MAX_VALUE;
 
@@ -141,13 +132,88 @@ public class AStarAlgorithm {
             startLocation = new AStarAlgorithm(layout, cell, end);
             int pathDistance = startLocation.findPath();
 
-            int currentResult = function.calculate(deliveryGuys, cell, pathDistance);
+            int currentResult = function.calculate(deliveryTypes, cell, pathDistance);
 
             if (minResult > currentResult) {
                 minResult = currentResult;
             }
         }
         return minResult;
+    }
+
+
+    private class TesterClass {
+
+        //       Location restaurant
+        private final Map<Cell, List<DeliveryInfo>> deliveryInfosForRestaurant = new HashMap<>();
+
+        private List<DeliveryInfo> findAllDeliveryInfo(char[][] layout, Cell end) {
+
+            List<Cell> allDeliveryGuysLocation = Utils.getAllStartingPoints(layout);
+            Map<Cell, DeliveryType> deliveryTypes = Utils.getDeliveryGuys();
+
+            List<DeliveryInfo> deliveryInfos = new ArrayList<>();
+            AStarAlgorithm startLocation;
+
+            for (Cell cell : allDeliveryGuysLocation) {
+                startLocation = new AStarAlgorithm(layout, cell, end);
+                int pathDistance = startLocation.findPath();
+
+                Location deliveryGuyLocation = new Location(cell.getRow(), cell.getCol());
+                DeliveryType deliveryType = deliveryTypes.get(cell);
+                double priceDelivery = pathDistance * deliveryType.getPricePerKm();
+                int estimateTime = pathDistance * deliveryType.getTimePerKm();
+
+                //if....
+
+                DeliveryInfo deliveryInfo =
+                    new DeliveryInfo(deliveryGuyLocation, priceDelivery, estimateTime, deliveryType);
+
+                deliveryInfos.add(deliveryInfo);
+
+            }
+
+//            switch (shippingMethod) {
+//                case FASTEST -> deliveryInfos.sort(new DeliveryInfoTimeComparator());
+//                case CHEAPEST -> deliveryInfos.sort(new DeliveryInfoPriceComparator());
+//                default -> throw new IllegalArgumentException("Unknown shipping method");
+//            }
+
+            return deliveryInfos;
+        }
+
+        private void storeDeliveryInfoForRestaurant(char[][] layout, Cell restaurantLocation) {
+
+            if (deliveryInfosForRestaurant.containsKey(restaurantLocation)) {
+                return; //Data is saved
+            }
+
+//            Map<ShippingMethod, List<DeliveryInfo>> deliveryInfoMap = new HashMap<>();
+//            deliveryInfoMap.put(ShippingMethod.FASTEST, findAllDeliveryInfo(layout, restaurantLocation, ShippingMethod.FASTEST));
+//            deliveryInfoMap.put(ShippingMethod.CHEAPEST, findAllDeliveryInfo(layout, restaurantLocation, ShippingMethod.CHEAPEST));
+//
+//
+//            deliveryInfosForRestaurant.put(restaurantLocation, deliveryInfoMap);
+
+            deliveryInfosForRestaurant.putIfAbsent(restaurantLocation, findAllDeliveryInfo(layout, restaurantLocation));
+        }
+
+        public List<DeliveryInfo> getDeliveryInfoByMethod(ShippingMethod shippingMethod, Cell restaurantLocation) {
+            //if == null
+
+            List<DeliveryInfo> deliveryInfos = deliveryInfosForRestaurant.get(restaurantLocation);
+
+            switch (shippingMethod) {
+                case FASTEST -> deliveryInfos.sort(new DeliveryInfoTimeComparator());
+                case CHEAPEST -> deliveryInfos.sort(new DeliveryInfoPriceComparator());
+                default -> throw new IllegalArgumentException("Unknown shipping method");
+            }
+
+            return deliveryInfos;
+        }
+
+
+        //private final Map<Cell, Map<ShippingMethod, List<DeliveryInfo>>> deliveryInfosForRestaurant = new HashMap<>();
     }
 
 

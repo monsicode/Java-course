@@ -8,7 +8,7 @@ import java.util.Map;
 public class CheapestDelivery implements DeliveryMethod {
 
     @Override
-    public int calculate(Map<Cell, DeliveryType> deliveryGuy, Cell curCell, int pathDistance) {
+    public double calculate(Map<Cell, DeliveryType> deliveryGuy, Cell curCell, int pathDistance) {
         return deliveryGuy.get(curCell).getPricePerKm() * pathDistance;
     }
 }
