@@ -1,9 +1,10 @@
-package bg.sofia.uni.fmi.mjt.glovo.pathAlgorithm;
+package bg.sofia.uni.fmi.mjt.glovo.pathalgorithm;
 
 import java.util.Objects;
 
 public class Cell {
-    private final int row, col;
+    private final int row;
+    private final int col;
     private int gCost;
     private int fCost; // (g + h)
 
@@ -30,25 +31,24 @@ public class Cell {
         return fCost;
     }
 
-    public void setgCost(int gCost) {
+    public void setGCost(int gCost) {
         this.gCost = gCost;
     }
 
-    public void setfCost(int fCost) {
+    public void setFCost(int fCost) {
         this.fCost = fCost;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Cell)) return false;
-        Cell other = (Cell) obj;
-        return this.row == other.row && this.col == other.col;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Cell cell = (Cell) object;
+        return row == cell.row && col == cell.col;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(row, col);
     }
-
 }

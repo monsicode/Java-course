@@ -2,7 +2,7 @@ package bg.sofia.uni.fmi.mjt.glovo;
 
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryType;
-import bg.sofia.uni.fmi.mjt.glovo.pathAlgorithm.Cell;
+import bg.sofia.uni.fmi.mjt.glovo.pathalgorithm.Cell;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,10 +14,10 @@ public class Utils {
 
 
     private static List<Cell> allStartingPoints;
-    private static final Map<Cell, DeliveryType> deliveryGuysByLocation = new HashMap<>();
+    private static final Map<Cell, DeliveryType> DELIVERY_GUYS_BY_LOCATION = new HashMap<>();
 
     public static Map<Cell, DeliveryType> getDeliveryGuys() {
-        return Collections.unmodifiableMap(deliveryGuysByLocation);
+        return Collections.unmodifiableMap(DELIVERY_GUYS_BY_LOCATION);
     }
 
     public static List<Cell> getAllStartingPoints(char[][] grid) {
@@ -36,12 +36,12 @@ public class Utils {
                 if (grid[x][y] == MapEntityType.DELIVERY_GUY_CAR.getId()) {
 
                     startingPoints.add(new Cell(x, y));
-                    deliveryGuysByLocation.putIfAbsent(new Cell(x, y), DeliveryType.CAR);
+                    DELIVERY_GUYS_BY_LOCATION.putIfAbsent(new Cell(x, y), DeliveryType.CAR);
 
                 } else if (grid[x][y] == MapEntityType.DELIVERY_GUY_BIKE.getId()) {
 
                     startingPoints.add(new Cell(x, y));
-                    deliveryGuysByLocation.putIfAbsent(new Cell(x, y), DeliveryType.BIKE);
+                    DELIVERY_GUYS_BY_LOCATION.putIfAbsent(new Cell(x, y), DeliveryType.BIKE);
 
                 }
             }

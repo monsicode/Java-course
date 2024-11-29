@@ -8,4 +8,5 @@ public class DeliveryInfoTimeComparator implements Comparator<DeliveryInfo> {
     public int compare(DeliveryInfo o1, DeliveryInfo o2) {
         return Integer.compare(o1.estimatedTime(), o2.estimatedTime());
     }
+
 }
