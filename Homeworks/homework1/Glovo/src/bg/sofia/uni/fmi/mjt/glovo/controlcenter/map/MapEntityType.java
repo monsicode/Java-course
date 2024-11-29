@@ -14,7 +14,8 @@ public enum MapEntityType {
         id = c;
     }
 
-    public char getId() {
+    public char getCharacter() {
         return id;
     }
+
 }

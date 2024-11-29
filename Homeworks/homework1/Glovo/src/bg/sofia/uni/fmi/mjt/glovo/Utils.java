@@ -2,6 +2,7 @@ package bg.sofia.uni.fmi.mjt.glovo;
 
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryType;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapSymbolException;
 import bg.sofia.uni.fmi.mjt.glovo.pathalgorithm.Cell;
 
 import java.util.ArrayList;
@@ -33,12 +34,12 @@ public class Utils {
         for (int x = 0; x < grid.length; x++) {
             for (int y = 0; y < grid[0].length; y++) {
 
-                if (grid[x][y] == MapEntityType.DELIVERY_GUY_CAR.getId()) {
+                if (grid[x][y] == MapEntityType.DELIVERY_GUY_CAR.getCharacter()) {
 
                     startingPoints.add(new Cell(x, y));
                     DELIVERY_GUYS_BY_LOCATION.putIfAbsent(new Cell(x, y), DeliveryType.CAR);
 
-                } else if (grid[x][y] == MapEntityType.DELIVERY_GUY_BIKE.getId()) {
+                } else if (grid[x][y] == MapEntityType.DELIVERY_GUY_BIKE.getCharacter()) {
 
                     startingPoints.add(new Cell(x, y));
                     DELIVERY_GUYS_BY_LOCATION.putIfAbsent(new Cell(x, y), DeliveryType.BIKE);
@@ -54,6 +55,24 @@ public class Utils {
         if (obj == null) {
             throw new IllegalArgumentException(errMessage);
         }
+    }
+
+    public static boolean isMapEntity(char ch) {
+        for (MapEntityType type : MapEntityType.values()) {
+            if (type.getCharacter() == ch) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static MapEntityType fromChar(char ch) {
+        for (MapEntityType type : MapEntityType.values()) {
+            if (type.getCharacter() == ch) {
+                return type;
+            }
+        }
+        throw new InvalidMapSymbolException("Invalid character: " + ch);
     }
 
 }

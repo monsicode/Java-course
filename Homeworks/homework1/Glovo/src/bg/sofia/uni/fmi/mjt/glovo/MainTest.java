@@ -5,14 +5,13 @@ import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.Location;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntity;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.Delivery;
-import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryInfo;
-import bg.sofia.uni.fmi.mjt.glovo.delivery.ShippingMethod;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapLayoutException;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapSymbolException;
 import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidOrderException;
 import bg.sofia.uni.fmi.mjt.glovo.exception.NoAvailableDeliveryGuyException;
 
 public class MainTest {
 
-    @SuppressWarnings("checkstyle:MethodLength")
     public static void main(String[] args) {
 
         char[][] layout = {
@@ -24,31 +23,20 @@ public class MainTest {
             {'#', '.', '#', '#', '#'}  // 4
         };
 
-//        ControlCenter controlCenter = new ControlCenter(layout);
-//
-//        DeliveryInfo deliveryInfo = controlCenter.findOptimalDeliveryGuy(new Location(1, 0),
-//            new Location(3, 1), 20, 29,
-//            ShippingMethod.CHEAPEST);
-//
-//       if (deliveryInfo != null) {
-//            System.out.println("\n");
-//            System.out.println(deliveryInfo);
-//        } else {
-//            System.out.println("\n");
-//            System.out.println("No such a delivery guy exist");
-//        }
-
-        Glovo app = new Glovo(layout);
-
         MapEntity client = new MapEntity(new Location(3, 1), MapEntityType.CLIENT);
         MapEntity restaurant = new MapEntity(new Location(1, 0), MapEntityType.RESTAURANT);
 
+//        ControlCenter controlCenter = new ControlCenter(layout);
+//        System.out.println(Arrays.deepToString(controlCenter.getLayout()));
+
         try {
+            Glovo app = new Glovo(layout);
             //Delivery delivery = app.getCheapestDelivery(client, restaurant, "pizza");
             Delivery delivery = app.getCheapestDeliveryWithinTimeLimit(client, restaurant, "pizza", 10);
             System.out.println("\n" + delivery);
-        } catch (NoAvailableDeliveryGuyException | InvalidOrderException e) {
-            System.out.println(e.getMessage());
+        } catch (InvalidMapLayoutException | InvalidMapSymbolException | NoAvailableDeliveryGuyException |
+                 InvalidOrderException | IllegalArgumentException err) {
+            System.out.println(err.getMessage());
         }
     }
 

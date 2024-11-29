@@ -1,6 +1,9 @@
 package bg.sofia.uni.fmi.mjt.glovo.controlcenter;
 
+import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryType;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapLayoutException;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapSymbolException;
 import bg.sofia.uni.fmi.mjt.glovo.pathalgorithm.AStarAlgorithm;
 import bg.sofia.uni.fmi.mjt.glovo.Utils;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.Location;
@@ -25,12 +28,40 @@ public class ControlCenter implements ControlCenterApi {
 
     private void setMapLayout(char[][] layout) {
 
+        nullCheck(layout, "Map cannot be null!");
+        areRowsEqualLength(layout);
+        areMapSymbolsValid(layout);
+
         mapLayout = new char[layout.length][];
 
         for (int i = 0; i < layout.length; i++) {
             mapLayout[i] = Arrays.copyOf(layout[i], layout[i].length);
         }
 
+    }
+
+    private void areRowsEqualLength(char[][] layout) {
+        int rowLength = layout[0].length;
+        for (int i = 1; i < layout.length; i++) {
+            if (layout[i].length != rowLength) {
+                throw new InvalidMapLayoutException("All rows in the map layout must have the same length.");
+            }
+        }
+    }
+
+    private boolean isValidMapSymbol(char ch) {
+        return Utils.isMapEntity(ch);
+    }
+
+    private void areMapSymbolsValid(char[][] layout) {
+        for (int i = 0; i < layout.length; i++) {
+            for (int j = 0; j < layout[i].length; j++) {
+                char c = layout[i][j];
+                if (!isValidMapSymbol(c)) {
+                    throw new InvalidMapSymbolException("Invalid character in map layout: " + c);
+                }
+            }
+        }
     }
 
     @Override
@@ -46,6 +77,10 @@ public class ControlCenter implements ControlCenterApi {
 
         int distanceFromRestaurantToClient = calculateDeliveryDistanceToClient(restaurantLocation, clientLocation);
 
+        if (distanceFromRestaurantToClient == 0) {
+            return bestDeliveryInfo;
+        }
+
         for (Cell curDeliveryGuy : allDeliveryGuysLocation) {
 
             int distanceToRestaurant = calculateDistanceToRestaurant(curDeliveryGuy, restaurantLocation);
@@ -54,11 +89,9 @@ public class ControlCenter implements ControlCenterApi {
                 getCurDeliveryInfo(curDeliveryGuy, distanceToRestaurant, distanceFromRestaurantToClient,
                     deliveryTypes.get(curDeliveryGuy));
 
-            if (!isDeliveryInfoOptimal(curDeliveryInfo, maxPrice, maxTime)) {
-                continue;
+            if (isDeliveryInfoOptimal(curDeliveryInfo, maxPrice, maxTime)) {
+                bestDeliveryInfo = chooseBestDeliveryByMethod(bestDeliveryInfo, curDeliveryInfo, shippingMethod);
             }
-
-            bestDeliveryInfo = chooseBestDeliveryByMethod(bestDeliveryInfo, curDeliveryInfo, shippingMethod);
         }
 
         return bestDeliveryInfo;
@@ -95,7 +128,6 @@ public class ControlCenter implements ControlCenterApi {
         return switch (shippingMethod) {
             case FASTEST -> curOption.estimatedTime() < bestOption.estimatedTime() ? curOption : bestOption;
             case CHEAPEST -> curOption.price() < bestOption.price() ? curOption : bestOption;
-            default -> throw new IllegalArgumentException("Unknown shipping method");
         };
     }
 
@@ -120,12 +152,20 @@ public class ControlCenter implements ControlCenterApi {
 
     @Override
     public MapEntity[][] getLayout() {
-//        MapEntity layout = new MapEntity[mapLayout.length][];
-//
-//        for (int i = 0; i < mapLayout.length; i++) {
-//            mapLayout[i] = Arrays.copyOf(mapLayout[i], mapLayout[i].length);
-//        }
-//        return layout;
-        return null;
+        MapEntity[][] layout = new MapEntity[mapLayout.length][];
+
+        for (int i = 0; i < mapLayout.length; i++) {
+            layout[i] = new MapEntity[mapLayout[i].length];
+
+            for (int j = 0; j < mapLayout[i].length; j++) {
+                char symbol = mapLayout[i][j];
+
+                MapEntityType type = Utils.fromChar(symbol);
+
+                layout[i][j] = new MapEntity(new Location(i, j), type);
+            }
+        }
+
+        return layout;
     }
 }

@@ -48,7 +48,6 @@ public class AStarAlgorithm {
         return neighbours;
     }
 
-    // to be static
     public int findPath() {
         start.setGCost(0);
         start.setFCost(heuristic(start));

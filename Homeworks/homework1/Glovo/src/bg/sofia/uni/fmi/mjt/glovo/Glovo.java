@@ -10,15 +10,18 @@ import bg.sofia.uni.fmi.mjt.glovo.exception.NoAvailableDeliveryGuyException;
 
 import java.util.Arrays;
 
-public class Glovo implements GlovoApi {
+import static bg.sofia.uni.fmi.mjt.glovo.Utils.nullCheck;
 
+public class Glovo implements GlovoApi {
 
     private char[][] mapLayout;
     private final ControlCenter controlCenter;
 
     public Glovo(char[][] mapLayout) {
-        setMapLayout(mapLayout);
+
         controlCenter = new ControlCenter(mapLayout);
+        setMapLayout(mapLayout);
+
     }
 
     private void setMapLayout(char[][] layout) {
@@ -64,6 +67,7 @@ public class Glovo implements GlovoApi {
                                                       ShippingMethod shippingMethod, double maxPrice, int maxTime)
         throws NoAvailableDeliveryGuyException {
 
+        validateInput(client, restaurant, foodItem);
         validateLocations(client, restaurant);
 
         Delivery delivery = null;
@@ -98,7 +102,7 @@ public class Glovo implements GlovoApi {
         int row = endPoint.location().x();
         int col = endPoint.location().y();
 
-        return mapLayout[row][col] == endPoint.type().getId();
+        return mapLayout[row][col] == endPoint.type().getCharacter();
 
     }
 
@@ -115,6 +119,12 @@ public class Glovo implements GlovoApi {
     private void validateLocations(MapEntity client, MapEntity restaurant) {
         validateLocation(client);
         validateLocation(restaurant);
+    }
+
+    private void validateInput(MapEntity client, MapEntity restaurant, String foodItem) {
+        nullCheck(client, "Client cannot be null");
+        nullCheck(restaurant, "Restaurant cannot be null");
+        nullCheck(foodItem, "FoodItem cannot be null");
     }
 
 }
