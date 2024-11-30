@@ -8,14 +8,14 @@ public enum MapEntityType {
     DELIVERY_GUY_CAR('A'),
     DELIVERY_GUY_BIKE('B');
 
-    private final char id;
+    private final char ch;
 
-    MapEntityType(char c) {
-        id = c;
+    MapEntityType(char ch) {
+        this.ch = ch;
     }
 
     public char getCharacter() {
-        return id;
+        return ch;
     }
 
 }

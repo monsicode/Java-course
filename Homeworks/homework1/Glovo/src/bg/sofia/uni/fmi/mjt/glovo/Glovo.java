@@ -6,6 +6,8 @@ import bg.sofia.uni.fmi.mjt.glovo.delivery.Delivery;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryInfo;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.ShippingMethod;
 import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidOrderException;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidPriceException;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidTimeException;
 import bg.sofia.uni.fmi.mjt.glovo.exception.NoAvailableDeliveryGuyException;
 
 import java.util.Arrays;
@@ -53,6 +55,7 @@ public class Glovo implements GlovoApi {
     public Delivery getFastestDeliveryUnderPrice(MapEntity client, MapEntity restaurant, String foodItem,
                                                  double maxPrice) throws NoAvailableDeliveryGuyException {
 
+        validatePrice(maxPrice);
         return calculateOptimalDeliveryByMethod(client, restaurant, foodItem, ShippingMethod.FASTEST, maxPrice, -1);
     }
 
@@ -60,6 +63,7 @@ public class Glovo implements GlovoApi {
     public Delivery getCheapestDeliveryWithinTimeLimit(MapEntity client, MapEntity restaurant, String foodItem,
                                                        int maxTime) throws NoAvailableDeliveryGuyException {
 
+        validateTime(maxTime);
         return calculateOptimalDeliveryByMethod(client, restaurant, foodItem, ShippingMethod.CHEAPEST, -1, maxTime);
     }
 
@@ -125,6 +129,18 @@ public class Glovo implements GlovoApi {
         nullCheck(client, "Client cannot be null");
         nullCheck(restaurant, "Restaurant cannot be null");
         nullCheck(foodItem, "FoodItem cannot be null");
+    }
+
+    private void validatePrice(double price) {
+        if (price < 1) {
+            throw new InvalidPriceException("Price for delivery cannot be under 1lv.");
+        }
+    }
+
+    private void validateTime(int maxTime) {
+        if (maxTime < 0) {
+            throw new InvalidTimeException("Time for delivery cannot be under 0 min.");
+        }
     }
 
 }
