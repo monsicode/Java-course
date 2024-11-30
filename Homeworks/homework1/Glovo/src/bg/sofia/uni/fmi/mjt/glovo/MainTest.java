@@ -1,6 +1,5 @@
 package bg.sofia.uni.fmi.mjt.glovo;
 
-import bg.sofia.uni.fmi.mjt.glovo.controlcenter.ControlCenter;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.Location;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntity;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
@@ -11,6 +10,9 @@ import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidOrderException;
 import bg.sofia.uni.fmi.mjt.glovo.exception.NoAvailableDeliveryGuyException;
 
 public class MainTest {
+
+    private static final int X = 3;
+    private static final int MAX_TIME = 10;
 
     public static void main(String[] args) {
 
@@ -23,7 +25,7 @@ public class MainTest {
             {'#', '.', '#', '#', '#'}  // 4
         };
 
-        MapEntity client = new MapEntity(new Location(3, 1), MapEntityType.CLIENT);
+        MapEntity client = new MapEntity(new Location(X, 1), MapEntityType.CLIENT);
         MapEntity restaurant = new MapEntity(new Location(1, 0), MapEntityType.RESTAURANT);
 
 //        ControlCenter controlCenter = new ControlCenter(layout);
@@ -32,7 +34,7 @@ public class MainTest {
         try {
             Glovo app = new Glovo(layout);
             //Delivery delivery = app.getCheapestDelivery(client, restaurant, "pizza");
-            Delivery delivery = app.getCheapestDeliveryWithinTimeLimit(client, restaurant, "pizza", 10);
+            Delivery delivery = app.getCheapestDeliveryWithinTimeLimit(client, restaurant, "pizza", MAX_TIME);
             System.out.println("\n" + delivery);
         } catch (InvalidMapLayoutException | InvalidMapSymbolException | NoAvailableDeliveryGuyException |
                  InvalidOrderException | IllegalArgumentException err) {
