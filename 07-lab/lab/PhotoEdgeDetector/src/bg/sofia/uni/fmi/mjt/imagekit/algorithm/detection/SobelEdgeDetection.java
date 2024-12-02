@@ -18,10 +18,8 @@ public class SobelEdgeDetection implements EdgeDetectionAlgorithm {
         {1, 2, 1}
     };
 
-    private static final int THRESHOLDING = 90;
-    private static final int BLACK = 0;
     private static final int WHITE = 255;
-
+    private static final int MASK_WHITE = 0xFF;
 
     private final ImageAlgorithm grayscaleAlgorithm;
 
@@ -52,9 +50,8 @@ public class SobelEdgeDetection implements EdgeDetectionAlgorithm {
                 int gradientX = calculateGradientX(image, x, y);
                 int gradientY = calculateGradientY(image, x, y);
 
-                int gradient = (int) Math.sqrt(gradientX * gradientX + gradientY * gradientY);
-
-                int newPixelValue = (gradient > THRESHOLDING) ? WHITE : BLACK;
+                int edgeMagnitude = (int) Math.sqrt(gradientX * gradientX + gradientY * gradientY);
+                int newPixelValue = Math.min(WHITE, edgeMagnitude);
 
                 Color newColor = new Color(newPixelValue, newPixelValue, newPixelValue);
                 resultImage.setRGB(x, y, newColor.getRGB());
@@ -65,21 +62,24 @@ public class SobelEdgeDetection implements EdgeDetectionAlgorithm {
 
     private int calculateGradientX(BufferedImage image, int x, int y) {
         int gradientX = 0;
-        for (int j = -1; j <= 1; j++) {
-            for (int i = -1; i <= 1; i++) {
-                int pixelValue = new Color(image.getRGB(x + i, y + j)).getRed();
-                gradientX += HORIZONTAL_SOBEL_KERNEL[j + 1][i + 1] * pixelValue;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+
+                int pixelValue = (image.getRGB(x + i, y + j) & MASK_WHITE);
+                gradientX += HORIZONTAL_SOBEL_KERNEL[i + 1][j + 1] * pixelValue;
+
             }
         }
+
         return gradientX;
     }
 
     private int calculateGradientY(BufferedImage image, int x, int y) {
         int gradientY = 0;
-        for (int j = -1; j <= 1; j++) {
-            for (int i = -1; i <= 1; i++) {
-                int pixelValue = new Color(image.getRGB(x + i, y + j)).getRed();
-                gradientY += VERTICAL_SOBEL_KERNEL[j + 1][i + 1] * pixelValue;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                int pixelValue = (image.getRGB(x + i, y + j) & MASK_WHITE);
+                gradientY += VERTICAL_SOBEL_KERNEL[i + 1][j + 1] * pixelValue;
             }
         }
         return gradientY;

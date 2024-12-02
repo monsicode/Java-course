@@ -23,7 +23,7 @@ public class LuminosityGrayscaleTest {
     File tempFolder;
 
     @Test
-    void testIfProcessIsValid() {
+    void test() {
         BufferedImage img = new BufferedImage(10, 10, BufferedImage.TYPE_INT_RGB);
         img.setRGB(0, 0, new Color(255, 0, 0).getRGB());
 
