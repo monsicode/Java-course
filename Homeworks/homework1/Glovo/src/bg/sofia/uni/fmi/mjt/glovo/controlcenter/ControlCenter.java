@@ -4,6 +4,8 @@ import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryType;
 import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapLayoutException;
 import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapSymbolException;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidPriceException;
+import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidTimeException;
 import bg.sofia.uni.fmi.mjt.glovo.pathalgorithm.AStarAlgorithm;
 import bg.sofia.uni.fmi.mjt.glovo.Utils;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.Location;
@@ -19,6 +21,9 @@ import java.util.Map;
 import static bg.sofia.uni.fmi.mjt.glovo.Utils.nullCheck;
 
 public class ControlCenter implements ControlCenterApi {
+
+    private static final double NO_COST_CONSTRAIN = -1;
+    private static final int NO_TIME_CONSTRAIN = -1;
 
     private char[][] mapLayout;
 
@@ -67,8 +72,9 @@ public class ControlCenter implements ControlCenterApi {
     @Override
     public DeliveryInfo findOptimalDeliveryGuy(Location restaurantLocation, Location clientLocation, double maxPrice,
                                                int maxTime, ShippingMethod shippingMethod) {
-
         validateInput(restaurantLocation, clientLocation, maxPrice, maxTime, shippingMethod);
+        validatePrice(maxPrice);
+        validateTime(maxTime);
 
         DeliveryInfo bestDeliveryInfo = null;
 
@@ -93,7 +99,6 @@ public class ControlCenter implements ControlCenterApi {
                 bestDeliveryInfo = chooseBestDeliveryByMethod(bestDeliveryInfo, curDeliveryInfo, shippingMethod);
             }
         }
-
         return bestDeliveryInfo;
     }
 
@@ -115,8 +120,8 @@ public class ControlCenter implements ControlCenterApi {
     }
 
     private boolean isDeliveryInfoOptimal(DeliveryInfo deliveryInfo, double maxPrice, int maxTime) {
-        return (maxPrice == -1 || deliveryInfo.price() <= maxPrice) &&
-            (maxTime == -1 || deliveryInfo.estimatedTime() <= maxTime);
+        return (Double.compare(maxPrice, NO_COST_CONSTRAIN) == 0 || deliveryInfo.price() <= maxPrice) &&
+            (maxTime == NO_TIME_CONSTRAIN || deliveryInfo.estimatedTime() <= maxTime);
     }
 
     private DeliveryInfo chooseBestDeliveryByMethod(DeliveryInfo bestOption, DeliveryInfo curOption,
@@ -168,4 +173,17 @@ public class ControlCenter implements ControlCenterApi {
 
         return layout;
     }
+
+    private void validatePrice(double price) {
+        if (price < 0 && Double.compare(price, NO_COST_CONSTRAIN) != 0) {
+            throw new InvalidPriceException("Price for delivery cannot be under -1.");
+        }
+    }
+
+    private void validateTime(int maxTime) {
+        if (maxTime != NO_TIME_CONSTRAIN && maxTime < 0) {
+            throw new InvalidTimeException("Time for delivery cannot be under -1");
+        }
+    }
+
 }

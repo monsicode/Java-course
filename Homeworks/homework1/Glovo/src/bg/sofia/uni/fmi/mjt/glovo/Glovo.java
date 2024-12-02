@@ -16,6 +16,8 @@ import static bg.sofia.uni.fmi.mjt.glovo.Utils.nullCheck;
 
 public class Glovo implements GlovoApi {
 
+    private static final double MIN_PRICE = 1.0;
+
     private char[][] mapLayout;
     private final ControlCenter controlCenter;
 
@@ -132,7 +134,7 @@ public class Glovo implements GlovoApi {
     }
 
     private void validatePrice(double price) {
-        if (price < 1) {
+        if (Double.compare(price, MIN_PRICE) < 0) {
             throw new InvalidPriceException("Price for delivery cannot be under 1lv.");
         }
     }

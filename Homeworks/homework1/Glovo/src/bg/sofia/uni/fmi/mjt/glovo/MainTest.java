@@ -1,12 +1,9 @@
 package bg.sofia.uni.fmi.mjt.glovo;
 
-import bg.sofia.uni.fmi.mjt.glovo.controlcenter.ControlCenter;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.Location;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntity;
 import bg.sofia.uni.fmi.mjt.glovo.controlcenter.map.MapEntityType;
 import bg.sofia.uni.fmi.mjt.glovo.delivery.Delivery;
-import bg.sofia.uni.fmi.mjt.glovo.delivery.DeliveryInfo;
-import bg.sofia.uni.fmi.mjt.glovo.delivery.ShippingMethod;
 import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapLayoutException;
 import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidMapSymbolException;
 import bg.sofia.uni.fmi.mjt.glovo.exception.InvalidOrderException;
@@ -30,15 +27,6 @@ public class MainTest {
 
         MapEntity client = new MapEntity(new Location(X, 1), MapEntityType.CLIENT);
         MapEntity restaurant = new MapEntity(new Location(1, 0), MapEntityType.RESTAURANT);
-
-        ControlCenter controlCenter = new ControlCenter(layout);
-
-        Location rest = new Location(1, 0);
-
-        DeliveryInfo info =
-            controlCenter.findOptimalDeliveryGuy(rest, new Location(X, 1), -7, -1, ShippingMethod.CHEAPEST);
-
-        System.out.println(info);
 
         try {
             Glovo app = new Glovo(layout);
