@@ -1,4 +1,5 @@
 package bg.sofia.uni.fmi.mjt.frauddetector.transaction;
 
-public class Channel {
+public enum Channel {
+    ATM, ONLINE, BRANCH
 }
