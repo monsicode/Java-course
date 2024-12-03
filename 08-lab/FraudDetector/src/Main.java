@@ -1,33 +1,37 @@
+import bg.sofia.uni.fmi.mjt.frauddetector.analyzer.TransactionAnalyzer;
 import bg.sofia.uni.fmi.mjt.frauddetector.analyzer.TransactionAnalyzerImpl;
 import bg.sofia.uni.fmi.mjt.frauddetector.rule.FrequencyRule;
+import bg.sofia.uni.fmi.mjt.frauddetector.rule.LocationsRule;
+import bg.sofia.uni.fmi.mjt.frauddetector.rule.Rule;
+import bg.sofia.uni.fmi.mjt.frauddetector.rule.SmallTransactionsRule;
+import bg.sofia.uni.fmi.mjt.frauddetector.rule.ZScoreRule;
 import bg.sofia.uni.fmi.mjt.frauddetector.transaction.Channel;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.time.Period;
-import java.util.Map;
+import java.util.List;
 
 public class Main {
+
     public static void main(String[] args) throws FileNotFoundException {
-        Reader dataInput = new FileReader("dataset.csv");
+        String filePath = "dataset.csv";
 
-        TransactionAnalyzerImpl tr = new TransactionAnalyzerImpl(dataInput);
+        Reader reader = new FileReader(filePath);
+        List<Rule> rules = List.of(
+            new ZScoreRule(1.5, 0.3),
+            new LocationsRule(3, 0.4),
+            new FrequencyRule(4, Period.ofWeeks(4), 0.25),
+            new SmallTransactionsRule(1, 10.20, 0.05)
+        );
 
-        //System.out.println(tr.allAccountIDs());
+        TransactionAnalyzer analyzer = new TransactionAnalyzerImpl(reader, rules);
 
-        Map<Channel, Integer> map = tr.transactionCountByChannel();
-
-        //System.out.println(map.get(Channel.ONLINE));
-
-        //System.out.println(tr.amountSpentByUser("AC00411"));
-        // System.out.println(tr.allTransactionsByUser("AC00411"));
-
-//        System.out.println(Period.ofWeeks(1));
-
-        FrequencyRule rule = new FrequencyRule(2, Period.ofMonths(2), 0.2);
-
-        System.out.println(rule.applicable(tr.allTransactionsByUser("AC00135")));
+        System.out.println(analyzer.allAccountIDs());
+      //  System.out.println(analyzer.allTransactionsByUser(analyzer.allTransactions().getFirst().accountID()));
+      //  System.out.println(analyzer.accountsRisk());
 
     }
+
 }
