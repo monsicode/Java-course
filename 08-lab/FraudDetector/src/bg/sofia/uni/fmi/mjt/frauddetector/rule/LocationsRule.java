@@ -21,7 +21,7 @@ public class LocationsRule implements Rule {
             .distinct()
             .count();
 
-        return countLocations <= threshold;
+        return countLocations >= threshold;
     }
 
     @Override

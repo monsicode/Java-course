@@ -28,9 +28,12 @@ public class Main {
 
         TransactionAnalyzer analyzer = new TransactionAnalyzerImpl(reader, rules);
 
-        System.out.println(analyzer.allAccountIDs());
-      //  System.out.println(analyzer.allTransactionsByUser(analyzer.allTransactions().getFirst().accountID()));
-      //  System.out.println(analyzer.accountsRisk());
+        //  System.out.println(analyzer.allAccountIDs());
+        //  System.out.println(analyzer.allTransactionsByUser(analyzer.allTransactions().getFirst().accountID()));
+        //  System.out.println(analyzer.accountsRisk());
+        Rule rule = new FrequencyRule(2, Period.ofMonths(1), 0.2);
+
+        System.out.println(rule.applicable(analyzer.allTransactionsByUser("AC00192")));
 
     }
 

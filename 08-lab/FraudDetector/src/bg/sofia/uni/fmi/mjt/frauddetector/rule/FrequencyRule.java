@@ -21,27 +21,22 @@ public class FrequencyRule implements Rule {
 
     @Override
     public boolean applicable(List<Transaction> transactions) {
-        if (transactionCountThreshold == 1) {
-            return true;
-        }
-
         List<Transaction> sortedByDate = transactions.stream()
             .sorted(Comparator.comparing(Transaction::transactionDate))
             .toList();
 
-        for (int i = 0; i + transactionCountThreshold <= sortedByDate.size(); i++) {
+        for (int i = 0; i + transactionCountThreshold <= sortedByDate.size() - 1; i++) {
 
             LocalDateTime startDate = sortedByDate.get(i).transactionDate();
-            LocalDateTime endDate = sortedByDate.get(i + transactionCountThreshold - 1).transactionDate();
+            LocalDateTime endDate = sortedByDate.get(i + transactionCountThreshold ).transactionDate();
 
             LocalDateTime thresholdTime = startDate.plus(timeWindow);
 
-            if (endDate.isBefore(thresholdTime)) {
-                return false;
+            if (!endDate.isAfter(thresholdTime)) {
+                return true;
             }
-
         }
-        return true;
+        return false;
     }
 
     @Override

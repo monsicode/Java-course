@@ -50,6 +50,7 @@ public class TransactionAnalyzerImpl implements TransactionAnalyzer {
     public List<String> allAccountIDs() {
         return transactions.stream()
             .map(Transaction::accountID)
+            .distinct()
             .toList();
     }
 
