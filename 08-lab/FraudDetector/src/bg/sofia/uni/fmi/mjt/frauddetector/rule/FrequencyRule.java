@@ -25,10 +25,10 @@ public class FrequencyRule implements Rule {
             .sorted(Comparator.comparing(Transaction::transactionDate))
             .toList();
 
-        for (int i = 0; i + transactionCountThreshold <= sortedByDate.size() - 1; i++) {
+        for (int i = 0; i + transactionCountThreshold <= sortedByDate.size(); i++) {
 
             LocalDateTime startDate = sortedByDate.get(i).transactionDate();
-            LocalDateTime endDate = sortedByDate.get(i + transactionCountThreshold ).transactionDate();
+            LocalDateTime endDate = sortedByDate.get(i + transactionCountThreshold - 1).transactionDate();
 
             LocalDateTime thresholdTime = startDate.plus(timeWindow);
 
@@ -41,6 +41,6 @@ public class FrequencyRule implements Rule {
 
     @Override
     public double weight() {
-        return weight;
+        return Double.parseDouble(String.format("%.2f", weight));
     }
 }

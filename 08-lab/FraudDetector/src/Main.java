@@ -30,10 +30,13 @@ public class Main {
 
         //  System.out.println(analyzer.allAccountIDs());
         //  System.out.println(analyzer.allTransactionsByUser(analyzer.allTransactions().getFirst().accountID()));
-        //  System.out.println(analyzer.accountsRisk());
-        Rule rule = new FrequencyRule(2, Period.ofMonths(1), 0.2);
+          //System.out.println(analyzer.accountsRisk());
+//        Rule rule = new FrequencyRule(2, Period.ofMonths(1), 0.2);
+//        ZScoreRule rule2 = new ZScoreRule(2, 0.2);
 
-        System.out.println(rule.applicable(analyzer.allTransactionsByUser("AC00192")));
+       // System.out.println(rule2.calculateVariance(analyzer.allTransactionsByUser("AC00192")));
+
+        System.out.println(Double.parseDouble(String.format("%.2f", 0.2352)));
 
     }
 

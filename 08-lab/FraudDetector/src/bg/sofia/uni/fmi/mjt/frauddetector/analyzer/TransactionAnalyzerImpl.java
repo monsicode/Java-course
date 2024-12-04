@@ -91,25 +91,29 @@ public class TransactionAnalyzerImpl implements TransactionAnalyzer {
     public double accountRating(String accountId) {
         checkNull(accountId);
 
-        return 0;
+        List<Transaction> transactionsByUser = allTransactionsByUser(accountId);
+
+        double totalRisk = rules.stream()
+            .filter(rule -> rule.applicable(transactionsByUser))
+            .mapToDouble(Rule::weight)
+            .sum();
+
+        totalRisk = Math.min(1.0, Math.max(0.0, totalRisk));
+
+        return Double.parseDouble(String.format("%.1f", totalRisk));
+
     }
 
     @Override
     public SortedMap<String, Double> accountsRisk() {
-
         Map<String, List<Transaction>> transactionsByAccount = transactions.stream()
             .collect(Collectors.groupingBy((Transaction::accountID), TreeMap::new, Collectors.toList()));
 
         SortedMap<String, Double> sortedRiskByAccount = new TreeMap<>();
 
-        transactionsByAccount.forEach((accountID, accountTransactions) -> {
-            double totalRisk = rules.stream()
-                .filter(rule -> rule.applicable(accountTransactions))
-                .mapToDouble(Rule::weight)
-                .sum();
-
+        transactionsByAccount.keySet().forEach((accountID) -> {
+            double totalRisk = accountRating(accountID);
             sortedRiskByAccount.put(accountID, totalRisk);
-
         });
 
         return sortedRiskByAccount;

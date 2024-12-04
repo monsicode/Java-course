@@ -27,6 +27,6 @@ public class SmallTransactionsRule implements Rule {
 
     @Override
     public double weight() {
-        return weight;
+        return Double.parseDouble(String.format("%.2f", weight));
     }
 }
