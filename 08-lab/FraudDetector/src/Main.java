@@ -16,7 +16,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-        String filePath = "dataset.csv";
+        String filePath = "test/bg/sofia/uni/fmi/mjt/frauddetector/analyzer/testFile.csv";
 
         Reader reader = new FileReader(filePath);
         List<Rule> rules = List.of(
@@ -36,7 +36,9 @@ public class Main {
 
        // System.out.println(rule2.calculateVariance(analyzer.allTransactionsByUser("AC00192")));
 
-        System.out.println(Double.parseDouble(String.format("%.2f", 0.2352)));
+       // System.out.println(Double.parseDouble(String.format("%.2f", 0.2352)));
+
+        System.out.println(analyzer.accountRating("AC00055"));
 
     }
 

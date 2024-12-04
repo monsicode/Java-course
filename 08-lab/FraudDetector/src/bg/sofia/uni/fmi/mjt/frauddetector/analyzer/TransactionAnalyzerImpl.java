@@ -24,11 +24,11 @@ public class TransactionAnalyzerImpl implements TransactionAnalyzer {
 
         this.rules = rules;
         var read = new BufferedReader(reader);
+
         transactions = read.lines()
             .skip(1)
             .map(Transaction::of)
             .toList();
-
     }
 
     private void checkIfSumIsOne(List<Rule> rules) {
@@ -37,7 +37,7 @@ public class TransactionAnalyzerImpl implements TransactionAnalyzer {
             .sum();
 
         if (Double.compare(totalWeight, SUM) != 0) {
-            throw new IllegalArgumentException("The sum of the rules dosen't make 1.0");
+            throw new IllegalArgumentException("The sum of the rules doesn't make 1.0");
         }
     }
 

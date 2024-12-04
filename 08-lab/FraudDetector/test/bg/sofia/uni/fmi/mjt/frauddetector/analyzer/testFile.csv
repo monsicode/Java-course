@@ -1,0 +1,4 @@
+TransactionID,AccountID,TransactionAmount,TransactionDate,Location,Channel
+TX000339,AC00055,33.89,2023-11-10 16:10:34,Nashville,Branch
+TX000340,AC00299,23.71,2023-09-18 16:04:52,Atlanta,Branch
+TX000341,AC00107,1830.0,2023-03-01 16:31:58,San Antonio,Online
