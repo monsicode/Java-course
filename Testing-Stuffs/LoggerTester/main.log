@@ -1,0 +1,57 @@
+2024-12-11 16:43:56,530 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:43:56,532 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:43:56,532 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:45:36,464 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:45:36,467 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:45:36,467 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:45:36,467 [main] INFO Main - Some info
+2024-12-11 16:48:54,540 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:48:54,542 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:48:54,542 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:48:54,543 [main] INFO Main - Some info
+2024-12-11 16:50:03,622 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:50:03,625 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:50:03,625 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:50:03,625 [main] INFO Main - Some info
+2024-12-11 16:51:49,062 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:51:49,065 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:51:49,065 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:51:49,065 [main] INFO Main - Some info
+2024-12-11 16:53:16,618 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:53:16,621 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:53:16,621 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:53:16,621 [main] INFO Main - Some info
+2024-12-11 16:55:42,004 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:55:42,006 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:55:42,006 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:55:42,006 [main] INFO Main - Some info
+2024-12-11 16:56:02,958 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:56:02,961 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:56:02,961 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:56:02,961 [main] INFO Main - Some info
+2024-12-11 16:56:45,690 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:56:45,696 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:56:45,696 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:56:45,697 [main] INFO Main - Some info
+2024-12-11 16:58:02,237 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:58:02,244 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:58:02,244 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:58:02,245 [main] INFO Main - Some info
+2024-12-11 16:59:29,403 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 16:59:29,408 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 16:59:29,409 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 16:59:29,409 [main] INFO Main - Some info
+[34m17:01:02.089 INFO  Main.main() @10 - 3.This is an INFO message.
+[m[33m17:01:02.096 WARN  Main.main() @11 - 4.This is a WARN message.
+[m[31m17:01:02.096 ERROR Main.main() @12 - 5.This is an ERROR message.
+[m[34m17:01:02.097 INFO  Main.fun() @17 - Some info
+[m[33m17:01:49.838 WARN  Main.main() @11 - 4.This is a WARN message.
+[m[31m17:01:49.843 ERROR Main.main() @12 - 5.This is an ERROR message.
+[m[34m17:02:26.553 INFO  Main.main() @10 - 3.This is an INFO message.
+[m[33m17:02:26.558 WARN  Main.main() @11 - 4.This is a WARN message.
+[m[31m17:02:26.559 ERROR Main.main() @12 - 5.This is an ERROR message.
+[m[34m17:02:26.559 INFO  Main.fun() @17 - Some info
+[m2024-12-11 17:11:20,644 [main] INFO Main - 3.This is an INFO message.
+2024-12-11 17:11:20,650 [main] WARN Main - 4.This is a WARN message.
+2024-12-11 17:11:20,651 [main] ERROR Main - 5.This is an ERROR message.
+2024-12-11 17:11:20,651 [main] INFO Main - Some info
