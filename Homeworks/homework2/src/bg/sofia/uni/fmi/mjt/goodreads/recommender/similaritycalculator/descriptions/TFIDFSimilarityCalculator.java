@@ -4,14 +4,26 @@ import bg.sofia.uni.fmi.mjt.goodreads.book.Book;
 import bg.sofia.uni.fmi.mjt.goodreads.recommender.similaritycalculator.SimilarityCalculator;
 import bg.sofia.uni.fmi.mjt.goodreads.tokenizer.TextTokenizer;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TFIDFSimilarityCalculator implements SimilarityCalculator {
 
-    public TFIDFSimilarityCalculator(Set<Book> books, TextTokenizer tokenizer) {}
+    private final Set<Book> books;
+    private final TextTokenizer tokenizer;
+
+    public TFIDFSimilarityCalculator(Set<Book> books, TextTokenizer tokenizer) {
+        this.books = books;
+        this.tokenizer = tokenizer;
+    }
 
     /*
      * Do not modify!
@@ -25,15 +37,90 @@ public class TFIDFSimilarityCalculator implements SimilarityCalculator {
     }
 
     public Map<String, Double> computeTFIDF(Book book) {
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        Map<String, Double> tf = computeTF(book);
+        Map<String, Double> idf = computeIDF(book);
+
+        return tf.entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry -> {
+                    double tfValue = entry.getValue();
+                    double idfValue = idf.getOrDefault(entry.getKey(), 0.0);
+                    return tfValue * idfValue;
+                }
+            ));
+
     }
 
     public Map<String, Double> computeTF(Book book) {
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        List<String> words = tokenizer.tokenize(book.description());
+
+        Map<String, Long> wordCounts = words.stream()
+            .collect(Collectors.groupingBy(word -> word, Collectors.counting()));
+
+        int totalWords = words.size();
+
+        Map<String, Double> resultTF = new HashMap<>();
+        wordCounts.forEach((word, count) -> resultTF.put(word, count / (double) totalWords));
+
+        return resultTF;
     }
 
     public Map<String, Double> computeIDF(Book book) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        List<String> words = tokenizer.tokenize(book.description());
+
+        long totalBooks = books.size();
+
+        Map<String, Long> booksContainingWord = words.stream()
+            .distinct()
+            .collect(Collectors.toMap(
+                word -> word,
+                word -> books.stream()
+                    .filter(
+                        curBook -> tokenizer.tokenize(curBook.description()).contains(word))
+                    .count()
+            ));
+
+        return booksContainingWord.entrySet().stream()
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry -> {
+                    long count = entry.getValue();
+                    if (count == 0) {
+                        return 0.0;
+                    }
+                    return Math.log10((double) totalBooks / count);
+                    //return Math.round(idfValue * 100.0) / 100.0;
+                }
+            ));
+    }
+
+    public static void main(String[] args) {
+        Set<Book> books = Set.of(
+            new Book("id", "title", "Tom", "academy superhero club superhero",
+                List.of(new String[] {"Action", "Others"}), 3.4, 3, "baba"),
+            new Book("id2", "title", "Tom", "superhero mission save club\"",
+                List.of(new String[] {"Action", "Others"}), 3.4, 3, "baba"),
+            new Book("id3", "title", "Tom", "crime murder mystery club",
+                List.of(new String[] {"Action", "Others"}), 3.4, 3, "baba")
+        );
+
+        Book book = new Book("id", "title", "Tom", "academy is a the superhero club superhero",
+            List.of(new String[] {"Action", "Others"}), 3.4, 3, "baba");
+
+        try (Reader stopwordsReader = new FileReader("stopwords.txt")) {
+            TextTokenizer tokenizer = new TextTokenizer(stopwordsReader);
+
+            TFIDFSimilarityCalculator calculator = new TFIDFSimilarityCalculator(books, tokenizer);
+
+            System.out.println(calculator.computeTFIDF(book));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private double cosineSimilarity(Map<String, Double> first, Map<String, Double> second) {
