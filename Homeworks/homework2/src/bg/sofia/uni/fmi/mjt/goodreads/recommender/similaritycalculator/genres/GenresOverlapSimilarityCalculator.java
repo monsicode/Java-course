@@ -7,11 +7,6 @@ public class GenresOverlapSimilarityCalculator implements SimilarityCalculator {
 
     @Override
     public double calculateSimilarity(Book first, Book second) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    double overlapCoefficient(Book first, Book second) {
-
         long commonGenresCount = first.genres().stream()
             .distinct()
             .filter(second.genres()::contains)
@@ -28,7 +23,6 @@ public class GenresOverlapSimilarityCalculator implements SimilarityCalculator {
         double sizeSmallerSet = Math.min(genresFirst, genresSecond);
 
         return (commonGenresCount / sizeSmallerSet);
-
     }
 
 }
