@@ -27,7 +27,11 @@ public record Book(
         String numberRatings = tokens[FIELD_SIX];
         numberRatings = numberRatings.replace(",", EMPTY_STRING);
 
-        return new Book(tokens[0], tokens[FIELD_ONE], tokens[FIELD_TWO], tokens[FIELD_THREE],
+        return new Book(
+            tokens[0],
+            tokens[FIELD_ONE],
+            tokens[FIELD_TWO],
+            tokens[FIELD_THREE],
             List.of(tokens[FIELD_FOUR]),
             Double.parseDouble(tokens[FIELD_FIVE]), Integer.parseInt(numberRatings),
             tokens[FIELD_SEVEN]);
