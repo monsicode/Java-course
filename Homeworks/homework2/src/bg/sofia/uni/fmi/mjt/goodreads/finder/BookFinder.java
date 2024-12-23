@@ -67,14 +67,17 @@ public class BookFinder implements BookFinderAPI {
         return switch (option) {
             case MATCH_ANY -> books.stream()
                 .filter(book -> keywords.stream()
-                    .anyMatch(keyword -> book.title().contains(keyword) || book.description().contains(keyword)))
+                    .anyMatch(keyword ->
+                            tokenizer.tokenize(book.title()).contains(keyword) ||
+                            tokenizer.tokenize(book.description()).contains(keyword)))
                 .toList();
             case MATCH_ALL -> books.stream()
-                .filter(book -> book.genres().stream()
-                    .allMatch(keyword -> book.title().contains(keyword) || book.description().contains(keyword)))
+                .filter(book -> keywords.stream()
+                    .allMatch(keyword ->
+                            tokenizer.tokenize(book.title()).contains(keyword) ||
+                            tokenizer.tokenize(book.description()).contains(keyword)))
                 .toList();
         };
-
     }
 
 }
