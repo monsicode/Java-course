@@ -21,30 +21,31 @@ public class BookFinderTest {
         List.of("Action", "Horror", "Young Adult"), 3.4, 3, "baba");
     private final Book book2 = new Book("id2", "title2", "Tom", "academy superhero club superhero",
         List.of("Science Fiction", "Fantasy", "Adventure"), 3.4, 3, "baba");
-    private final Book book3 = new Book("id3", "title3", "Greg", "superhero mission save club",
-        List.of("Young Adult", "Horror"), 3.4, 3, "baba");
-    private final Book book4 = new Book("id4", "title4", "Anna", "crime murder mystery club",
-        List.of("Fantasy", "Criminal"), 3.4, 3, "baba");
+    private final Book book3 =
+        new Book("id3", "title3", "Greg", "superhero mission save club", List.of("Young Adult", "Horror"), 3.4, 3,
+            "baba");
+    private final Book book4 =
+        new Book("id4", "title4", "Anna", "crime murder mystery club", List.of("Fantasy", "Criminal"), 3.4, 3, "baba");
 
     private final BookFinder bookFinder = new BookFinder(Set.of(book1, book2, book3, book4), tokenizer);
 
     @Test
     void testAllGenres() {
-        Set<String> expectedSet = Set.of(
-            "Action", "Horror", "Science Fiction", "Fantasy", "Adventure", "Young Adult", "Criminal"
-        );
+        Set<String> expectedSet =
+            Set.of("Action", "Horror", "Science Fiction", "Fantasy", "Adventure", "Young Adult", "Criminal");
 
         assertEquals(expectedSet, bookFinder.allGenres(), "All genres should match");
     }
 
     @Test
     void testSearchByAuthorWithNullAuthor() {
-        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByAuthor(null));
+        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByAuthor(null), "Cannot have null author");
     }
 
     @Test
     void testSearchByAuthorWithEmptyString() {
-        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByAuthor(""));
+        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByAuthor(""),
+            "Author cannot be empty string");
     }
 
     @Test
@@ -68,7 +69,8 @@ public class BookFinderTest {
 
     @Test
     void testSearchByGenresWithNullGenres() {
-        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByGenres(null, MatchOption.MATCH_ALL));
+        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByGenres(null, MatchOption.MATCH_ALL),
+            "Cannot search with null genres");
     }
 
     @Test
@@ -79,7 +81,8 @@ public class BookFinderTest {
 
         List<Book> result = bookFinder.searchByGenres(searchedGenres, MatchOption.MATCH_ALL);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "Two books contain horror as a genre");
     }
 
     @Test
@@ -89,7 +92,8 @@ public class BookFinderTest {
         Set<String> searchedGenres = Set.of("Horror", "Young Adult");
         List<Book> result = bookFinder.searchByGenres(searchedGenres, MatchOption.MATCH_ALL);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "Two books contain both horror and young adult as genre");
     }
 
     @Test
@@ -99,7 +103,8 @@ public class BookFinderTest {
         Set<String> searchedGenres = Set.of("Comedy", "Young Adult");
         List<Book> result = bookFinder.searchByGenres(searchedGenres, MatchOption.MATCH_ALL);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "No book has both comedy and young adult as genre");
     }
 
     @Test
@@ -109,7 +114,8 @@ public class BookFinderTest {
         Set<String> searchedGenres = Set.of("Comedy", "Young Adult");
         List<Book> result = bookFinder.searchByGenres(searchedGenres, MatchOption.MATCH_ANY);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "Two books contain comedy or young adult genre");
     }
 
     @Test
@@ -119,7 +125,8 @@ public class BookFinderTest {
         Set<String> searchedGenres = Set.of("Young Adult");
         List<Book> result = bookFinder.searchByGenres(searchedGenres, MatchOption.MATCH_ANY);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "Two books contain young adult genre");
     }
 
     @Test
@@ -129,27 +136,23 @@ public class BookFinderTest {
         Set<String> searchedGenres = Set.of("Comedy", "LGB");
         List<Book> result = bookFinder.searchByGenres(searchedGenres, MatchOption.MATCH_ANY);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "No book contains comedy or lgb as genre");
     }
 
     private void setMockForTokenizer() {
-        when(tokenizer.tokenize("academy superhero club superhero"))
-            .thenReturn(List.of("academy", "superhero", "club", "superhero"));
-        when(tokenizer.tokenize("academy is a the superhero club superhero"))
-            .thenReturn(List.of("academy", "superhero", "club", "superhero"));
-        when(tokenizer.tokenize("superhero mission save club"))
-            .thenReturn(List.of("superhero", "mission", "save", "club"));
-        when(tokenizer.tokenize("crime murder mystery club"))
-            .thenReturn(List.of("crime", "murder", "mystery", "club"));
+        when(tokenizer.tokenize("academy superhero club superhero")).thenReturn(
+            List.of("academy", "superhero", "club", "superhero"));
+        when(tokenizer.tokenize("academy is a the superhero club superhero")).thenReturn(
+            List.of("academy", "superhero", "club", "superhero"));
+        when(tokenizer.tokenize("superhero mission save club")).thenReturn(
+            List.of("superhero", "mission", "save", "club"));
+        when(tokenizer.tokenize("crime murder mystery club")).thenReturn(List.of("crime", "murder", "mystery", "club"));
 
-        when(tokenizer.tokenize("title1"))
-            .thenReturn(List.of("title1"));
-        when(tokenizer.tokenize("title2"))
-            .thenReturn(List.of("title2"));
-        when(tokenizer.tokenize("title3"))
-            .thenReturn(List.of("title3"));
-        when(tokenizer.tokenize("title4"))
-            .thenReturn(List.of("title4"));
+        when(tokenizer.tokenize("title1")).thenReturn(List.of("title1"));
+        when(tokenizer.tokenize("title2")).thenReturn(List.of("title2"));
+        when(tokenizer.tokenize("title3")).thenReturn(List.of("title3"));
+        when(tokenizer.tokenize("title4")).thenReturn(List.of("title4"));
 
     }
 
@@ -162,7 +165,8 @@ public class BookFinderTest {
         Set<String> keywords = Set.of("superhero");
         List<Book> result = bookFinder.searchByKeywords(keywords, MatchOption.MATCH_ANY);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "Three books contain the word superhero");
     }
 
     @Test
@@ -173,7 +177,8 @@ public class BookFinderTest {
         Set<String> keywords = Set.of("superhero", "murder");
         List<Book> result = bookFinder.searchByKeywords(keywords, MatchOption.MATCH_ANY);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "All books should be returned");
     }
 
     @Test
@@ -184,7 +189,8 @@ public class BookFinderTest {
         Set<String> keywords = Set.of("superhero", "title4");
         List<Book> result = bookFinder.searchByKeywords(keywords, MatchOption.MATCH_ANY);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "All books should be returned");
     }
 
     @Test
@@ -196,7 +202,7 @@ public class BookFinderTest {
         Set<String> keywords = Set.of("title3");
         List<Book> result = bookFinder.searchByKeywords(keywords, MatchOption.MATCH_ANY);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks), "Book 3 should be returned");
     }
 
     @Test
@@ -207,12 +213,14 @@ public class BookFinderTest {
         Set<String> keywords = Set.of("title");
         List<Book> result = bookFinder.searchByKeywords(keywords, MatchOption.MATCH_ANY);
 
-        assertFalse(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertFalse(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "Book 2 dosen't have this keyword");
     }
 
     @Test
     void testSearchByKeywordsWithNull() {
-        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByKeywords(null, MatchOption.MATCH_ALL));
+        assertThrows(IllegalArgumentException.class, () -> bookFinder.searchByKeywords(null, MatchOption.MATCH_ALL),
+            "Should throw exception for null keyword");
     }
 
     @Test
@@ -223,7 +231,7 @@ public class BookFinderTest {
         Set<String> keywords = Set.of("superhero", "title4");
         List<Book> result = bookFinder.searchByKeywords(keywords, MatchOption.MATCH_ALL);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks), "Should return empty set");
     }
 
     @Test
@@ -234,14 +242,15 @@ public class BookFinderTest {
         Set<String> keywords = Set.of("superhero", "title3");
         List<Book> result = bookFinder.searchByKeywords(keywords, MatchOption.MATCH_ALL);
 
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks),
+            "Only one book has both of the keywords");
     }
 
     @Test
     void testAllBooksReturn() {
         Set<Book> expectedBooks = Set.of(book1, book2, book3, book4);
         Set<Book> result = bookFinder.allBooks();
-        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks));
+        assertTrue(expectedBooks.containsAll(result) && result.containsAll(expectedBooks), "All books are returned");
     }
 
 }

@@ -40,7 +40,7 @@ public class TFIDFSimilarityCalculatorTest {
             "superhero", 0.5
         );
 
-        assertEquals(expected, calculator.computeTF(book1));
+        assertEquals(expected, calculator.computeTF(book1), "Should return as expected");
     }
 
     @Test
@@ -146,8 +146,27 @@ public class TFIDFSimilarityCalculatorTest {
         TFIDFSimilarityCalculator calculator = new TFIDFSimilarityCalculator(Set.of(), tokenizer);
         assertThrows(IllegalArgumentException.class, () -> calculator.computeTFIDF(null),
             "Book cannot be null in TfIDF");
-
     }
 
+
+    @Test
+    void testCalculateSimilarityWithIdenticalBooks() {
+        Book book1 = new Book("id1", "title1", "author1", "space travel adventure",
+            List.of("Sci-Fi"), 4.5, 10, "publisher");
+        Book book2 = new Book("id2", "title2", "author2", "crime mystery drama",
+            List.of("Thriller"), 4.0, 8, "publisher");
+
+        when(tokenizer.tokenize("space travel adventure"))
+            .thenReturn(List.of("space", "travel", "adventure"));
+        when(tokenizer.tokenize("crime mystery drama"))
+            .thenReturn(List.of("crime", "mystery", "drama"));
+
+        TFIDFSimilarityCalculator calculator = new TFIDFSimilarityCalculator(Set.of(book1, book2), tokenizer);
+
+        double expected = 0.0;
+        double actual = calculator.calculateSimilarity(book1, book2);
+
+        assertEquals(expected, actual, 0.0001, "Cosine Similarity for books that are not similar 0.0");
+    }
 
 }

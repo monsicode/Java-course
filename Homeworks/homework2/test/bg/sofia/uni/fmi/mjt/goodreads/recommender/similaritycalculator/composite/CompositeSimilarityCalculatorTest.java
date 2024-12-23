@@ -78,12 +78,14 @@ public class CompositeSimilarityCalculatorTest {
 
     @Test
     void testFirstBookIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> compositeCalculator.calculateSimilarity(null, book2));
+        assertThrows(IllegalArgumentException.class, () -> compositeCalculator.calculateSimilarity(null, book2),
+            "First book cannot be null");
     }
 
     @Test
     void testSecondBookIsNull() {
-        assertThrows(IllegalArgumentException.class, () -> compositeCalculator.calculateSimilarity(book1, null));
+        assertThrows(IllegalArgumentException.class, () -> compositeCalculator.calculateSimilarity(book1, null),
+            "Second book cannot be null");
     }
 
 }

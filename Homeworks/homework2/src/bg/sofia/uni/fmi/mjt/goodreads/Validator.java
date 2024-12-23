@@ -9,7 +9,7 @@ public class Validator {
     }
 
     public static void emptyStringCheck(String obj, String errMessage) {
-        if (obj.isEmpty()) {
+        if (obj.isBlank()) {
             throw new IllegalArgumentException(errMessage);
         }
     }
