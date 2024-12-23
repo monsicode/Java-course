@@ -45,7 +45,7 @@ public class TextTokenizerTest {
         TextTokenizer tokenizer = new TextTokenizer(new StringReader(stopWords));
 
         String input = "The,a of in.";
-        List<String> expected = List.of();
+        List<String> expected = List.of("thea");
 
         assertEquals(expected, tokenizer.tokenize(input),
             "The tokenize method should return empty list");

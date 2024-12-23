@@ -8,12 +8,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class BookTest {
 
-    private static final String[] tokens = {
+    private final String[] tokens = {
         "id1",
         "Title",
         "Tom",
         "academy is a the superhero club superhero",
-        "Action, Comedy",
+        "['Action', 'Comedy']",
         "3.4",
         "3",
         "baba.net"

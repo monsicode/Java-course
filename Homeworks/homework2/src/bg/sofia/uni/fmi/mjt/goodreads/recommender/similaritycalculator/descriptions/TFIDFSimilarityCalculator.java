@@ -4,9 +4,6 @@ import bg.sofia.uni.fmi.mjt.goodreads.book.Book;
 import bg.sofia.uni.fmi.mjt.goodreads.recommender.similaritycalculator.SimilarityCalculator;
 import bg.sofia.uni.fmi.mjt.goodreads.tokenizer.TextTokenizer;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static bg.sofia.uni.fmi.mjt.goodreads.Validator.nullCheck;
 
 public class TFIDFSimilarityCalculator implements SimilarityCalculator {
 
@@ -54,6 +53,7 @@ public class TFIDFSimilarityCalculator implements SimilarityCalculator {
     }
 
     public Map<String, Double> computeTF(Book book) {
+        nullCheck(book, "Book cannot be null in TF");
 
         List<String> words = tokenizer.tokenize(book.description());
 
@@ -69,6 +69,8 @@ public class TFIDFSimilarityCalculator implements SimilarityCalculator {
     }
 
     public Map<String, Double> computeIDF(Book book) {
+        nullCheck(book, "Book cannot be null in IDF");
+
         List<String> words = tokenizer.tokenize(book.description());
 
         long totalBooks = books.size();
@@ -78,8 +80,7 @@ public class TFIDFSimilarityCalculator implements SimilarityCalculator {
             .collect(Collectors.toMap(
                 word -> word,
                 word -> books.stream()
-                    .filter(
-                        curBook -> tokenizer.tokenize(curBook.description()).contains(word))
+                    .filter(curBook -> tokenizer.tokenize(curBook.description()).contains(word))
                     .count()
             ));
 

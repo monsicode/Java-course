@@ -1,5 +1,6 @@
 package bg.sofia.uni.fmi.mjt.goodreads.book;
 
+import java.util.Arrays;
 import java.util.List;
 
 public record Book(
@@ -27,12 +28,17 @@ public record Book(
         String numberRatings = tokens[FIELD_SIX];
         numberRatings = numberRatings.replace(",", EMPTY_STRING);
 
-        return new Book(
-            tokens[0],
+        String genresString = tokens[FIELD_FOUR];
+        String genresWithoutBrackets = genresString.substring(1, genresString.length() - 1);
+        List<String> genres = Arrays.stream(genresWithoutBrackets.replace("'", EMPTY_STRING).split(",\\s*"))
+            .map(String::trim)
+            .toList();
+
+        return new Book(tokens[0],
             tokens[FIELD_ONE],
             tokens[FIELD_TWO],
             tokens[FIELD_THREE],
-            List.of(tokens[FIELD_FOUR]),
+            genres,
             Double.parseDouble(tokens[FIELD_FIVE]), Integer.parseInt(numberRatings),
             tokens[FIELD_SEVEN]);
     }

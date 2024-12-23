@@ -12,6 +12,10 @@ public class GenresOverlapSimilarityCalculator implements SimilarityCalculator {
             .filter(second.genres()::contains)
             .count();
 
+        if (commonGenresCount == 0) {
+            return 0.0;
+        }
+
         long genresFirst = first.genres().stream()
             .distinct()
             .count();

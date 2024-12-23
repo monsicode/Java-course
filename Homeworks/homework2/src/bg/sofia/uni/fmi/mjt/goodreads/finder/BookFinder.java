@@ -45,7 +45,6 @@ public class BookFinder implements BookFinderAPI {
             .toList();
     }
 
-    //TODO all match to check later
     @Override
     public List<Book> searchByGenres(Set<String> genres, MatchOption option) {
         nullCheck(genres, "Genres cannot be null!");
@@ -55,7 +54,7 @@ public class BookFinder implements BookFinderAPI {
                 .filter(book -> book.genres().stream().anyMatch(genres::contains))
                 .toList();
             case MATCH_ALL -> books.stream()
-                .filter(book -> book.genres().stream().allMatch(genres::contains))
+                .filter(book -> book.genres().containsAll(genres))
                 .toList();
         };
 
@@ -67,10 +66,12 @@ public class BookFinder implements BookFinderAPI {
 
         return switch (option) {
             case MATCH_ANY -> books.stream()
-                //.filter(book -> book.description().stream().anyMatch(keywords::contains))
+                .filter(book -> keywords.stream()
+                    .anyMatch(keyword -> book.title().contains(keyword) || book.description().contains(keyword)))
                 .toList();
             case MATCH_ALL -> books.stream()
-                .filter(book -> book.genres().stream().allMatch(keywords::contains))
+                .filter(book -> book.genres().stream()
+                    .allMatch(keyword -> book.title().contains(keyword) || book.description().contains(keyword)))
                 .toList();
         };
 
