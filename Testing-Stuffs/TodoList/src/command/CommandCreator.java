@@ -29,7 +29,7 @@ public class CommandCreator {
     }
 
     public static Command newCommand(String clientInput) {
-        List<String> tokens = CommandCreator.getCommandArguments(clientInput);
+        List<String> tokens = getCommandArguments(clientInput);
         String[] args = tokens.subList(1, tokens.size()).toArray(new String[0]);
 
         return new Command(tokens.get(0), args);

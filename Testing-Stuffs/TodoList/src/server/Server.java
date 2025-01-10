@@ -19,7 +19,6 @@ public class Server {
     private static final String HOST = "localhost";
 
     private final CommandExecutor commandExecutor;
-
     private final int port;
     private boolean isServerWorking;
 
@@ -32,7 +31,6 @@ public class Server {
     }
 
     public void start() {
-
         System.out.println("Server is waiting for a client...");
 
         try (ServerSocketChannel serverSocketChannel = ServerSocketChannel.open()) {
@@ -54,11 +52,13 @@ public class Server {
                             SocketChannel clientChannel = (SocketChannel) key.channel();
                             String clientInput = getClientInput(clientChannel);
                             System.out.println(clientInput);
+
                             if (clientInput == null) {
                                 continue;
                             }
 
-                            String output = commandExecutor.execute(CommandCreator.newCommand(clientInput));
+                            String output =
+                                commandExecutor.execute(CommandCreator.newCommand(clientInput), clientChannel);
                             writeClientOutput(clientChannel, output);
 
                         } else if (key.isAcceptable()) {
@@ -72,7 +72,7 @@ public class Server {
                 }
             }
         } catch (IOException e) {
-            throw new UncheckedIOException("failed to start server", e);
+            throw new UncheckedIOException("Failed to start server", e);
         }
     }
 
@@ -120,5 +120,7 @@ public class Server {
 
         accept.configureBlocking(false);
         accept.register(selector, SelectionKey.OP_READ);
+        
+        System.out.println("New client connected: " + accept.getRemoteAddress());
     }
 }
