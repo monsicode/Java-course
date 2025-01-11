@@ -120,7 +120,7 @@ public class Server {
 
         accept.configureBlocking(false);
         accept.register(selector, SelectionKey.OP_READ);
-        
+
         System.out.println("New client connected: " + accept.getRemoteAddress());
     }
 }

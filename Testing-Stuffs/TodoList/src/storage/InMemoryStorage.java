@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryStorage implements Storage {
-    private final Map<String, Map<Integer, String>> userTodos;
+    private Map<String, Map<Integer, String>> userTodos;
 
     public InMemoryStorage() {
         this.userTodos = new HashMap<>();
